@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รายงานค่าปรับ — รายวัน รายเดือน รายปี</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root {
+  --navy:    #0D2137;
+  --blue:    #1A4F7A;
+  --accent:  #1D6FA4;
+  --sky:     #2E86C1;
+  --light:   #E8F2FB;
+  --gold:    #C9A227;
+  --gold2:   #F4C14F;
+  --green:   #1A6B3C;
+  --green2:  #27AE60;
+  --red:     #922B21;
+  --orange:  #CA6F1E;
+  --purple:  #6C3483;
+  --bg:      #EEF2F7;
+  --white:   #FFFFFF;
+  --g1:      #F7F9FB;
+  --g2:      #E4E9EF;
+  --g3:      #B0BEC5;
+  --text:    #1C2B3A;
+  --sub:     #546E7A;
+  --muted:   #90A4AE;
+  --sh:      0 2px 16px rgba(13,33,55,.10);
+  --sh2:     0 6px 28px rgba(13,33,55,.14);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+
+/* ── TOPBAR ── */
+.topbar{
+  height:54px;background:var(--navy);
+  display:flex;align-items:center;padding:0 28px;gap:14px;
+  position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.25);
+}
+.tb-brand{display:flex;align-items:center;gap:9px}
+.tb-dot{width:28px;height:28px;border-radius:7px;background:var(--gold2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--navy)}
+.tb-name{font-size:13px;font-weight:700;color:#fff}
+.tb-div{width:1px;height:20px;background:rgba(255,255,255,.15)}
+.tb-title{font-size:13px;color:rgba(255,255,255,.6)}
+.tb-right{margin-left:auto;display:flex;gap:8px}
+.tbtn{height:32px;padding:0 14px;border-radius:7px;font-size:12px;font-family:inherit;font-weight:600;cursor:pointer;border:none;display:flex;align-items:center;gap:5px;transition:all .15s}
+.tbtn-w{background:rgba(255,255,255,.12);color:#fff}
+.tbtn-w:hover{background:rgba(255,255,255,.22)}
+.tbtn-g{background:var(--gold2);color:var(--navy)}
+.tbtn-g:hover{background:#f8d470}
+
+/* ── PERIOD TABS ── */
+.period-tabs{
+  background:var(--white);
+  border-bottom:1px solid var(--g2);
+  padding:0 28px;
+  display:flex;align-items:center;gap:0;
+}
+.ptab{
+  height:48px;padding:0 22px;
+  display:flex;align-items:center;gap:8px;
+  font-size:14px;font-weight:600;color:var(--sub);
+  cursor:pointer;border-bottom:3px solid transparent;
+  transition:all .15s;white-space:nowrap;
+}
+.ptab:hover{color:var(--accent);background:var(--g1)}
+.ptab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--light)}
+.ptab-icon{font-size:16px}
+.ptab-div{width:1px;height:24px;background:var(--g2);margin:0 4px}
+
+/* ── FILTER ROW ── */
+.filter-row{
+  background:var(--white);border-bottom:1px solid var(--g2);
+  padding:12px 28px;display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;
+}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fl{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px}
+.fi,.fs{height:34px;border:1.5px solid var(--g2);border-radius:7px;padding:0 11px;font-size:13px;font-family:inherit;color:var(--text);background:var(--g1);outline:none;transition:border-color .15s}
+.fi{min-width:130px}.fs{min-width:120px}
+.fi:focus,.fs:focus{border-color:var(--accent);background:#fff}
+.fbtn{height:34px;padding:0 14px;border-radius:7px;border:none;font-size:12px;font-family:inherit;font-weight:600;cursor:pointer;transition:all .15s}
+.fbtn-a{background:var(--accent);color:#fff}.fbtn-a:hover{background:var(--blue)}
+.fbtn-c{background:var(--g1);color:var(--sub);border:1.5px solid var(--g2)}.fbtn-c:hover{border-color:var(--g3);color:var(--text)}
+.qbtn{
+  height:28px;padding:0 10px;border-radius:6px;
+  border:1.5px solid var(--g2);background:var(--g1);
+  font-size:11px;font-family:inherit;font-weight:700;
+  cursor:pointer;color:var(--accent);transition:all .15s;white-space:nowrap;
+}
+.qbtn:hover{background:var(--light);border-color:var(--accent)}
+
+/* ── MAIN ── */
+.main{padding:22px 28px 60px;max-width:1280px;margin:0 auto}
+
+/* ── STAT CARDS ── */
+.stat-row{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:22px}
+.stat-card{background:var(--white);border-radius:12px;padding:16px 18px;box-shadow:var(--sh);border-top:3px solid transparent}
+.stat-card.c1{border-top-color:var(--accent)}
+.stat-card.c2{border-top-color:var(--green2)}
+.stat-card.c3{border-top-color:#2E7D32}
+.stat-card.c4{border-top-color:#1565C0}
+.stat-card.c5{border-top-color:#6A1B9A}
+.stat-card.c6{border-top-color:#E65100}
+.sc-label{font-size:11px;color:var(--sub);font-weight:600;margin-bottom:6px}
+.sc-val{font-size:20px;font-weight:800;color:var(--navy);line-height:1}
+.sc-unit{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* ── CHART ROW ── */
+.chart-row{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:22px}
+.chart-card{background:var(--white);border-radius:12px;box-shadow:var(--sh);overflow:hidden}
+.chart-head{padding:14px 18px;border-bottom:1px solid var(--g2);display:flex;align-items:center;gap:10px}
+.ch-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.ch-title{font-size:13px;font-weight:700;color:var(--navy);flex:1}
+.ch-sub{font-size:11px;color:var(--sub)}
+.chart-body{padding:16px 18px}
+
+/* ── TABLE CARD ── */
+.table-card{background:var(--white);border-radius:12px;box-shadow:var(--sh);overflow:hidden}
+.tc-head{padding:14px 20px;border-bottom:1px solid var(--g2);display:flex;align-items:center;gap:10px}
+.tc-title{font-size:13px;font-weight:700;color:var(--navy);flex:1}
+.tc-badge{background:var(--light);color:var(--accent);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.tc-actions{display:flex;gap:6px}
+.tc-btn{height:28px;padding:0 12px;border-radius:6px;border:1.5px solid var(--g2);background:var(--g1);font-size:11px;font-family:inherit;font-weight:600;cursor:pointer;color:var(--sub);transition:all .15s;display:flex;align-items:center;gap:4px}
+.tc-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--navy)}
+thead th{padding:10px 14px;text-align:center;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;border-right:1px solid rgba(255,255,255,.1);letter-spacing:.3px}
+thead th:last-child{border-right:none}
+.th-sub{background:#163D61 !important;font-size:10px;font-weight:600;color:rgba(255,255,255,.75);border-top:1px solid rgba(255,255,255,.08)}
+
+tbody tr{border-bottom:1px solid var(--g2);transition:background .1s}
+tbody tr:nth-child(even){background:var(--g1)}
+tbody tr:hover{background:#EBF5FB}
+tbody tr.row-subtotal{background:#E8F2FB !important;font-weight:700;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent)}
+tbody tr.row-month{background:#EAF7EE !important;font-weight:700}
+tbody tr.row-grand{background:var(--navy) !important}
+tbody tr.row-grand td{color:#fff !important;font-weight:800}
+
+/* ── DATE GROUP HEADER ── */
+tbody tr.row-date-hdr td {
+  background: linear-gradient(90deg, #163D61 0%, #1A4F7A 100%) !important;
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 9px 16px;
+  border-bottom: none;
+  letter-spacing: .3px;
+}
+tbody tr.row-date-hdr:hover { background: none !important; }
+.date-hdr-icon { 
+  display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:6px;
+  background:rgba(255,255,255,.15);font-size:12px;
+  margin-right:8px;vertical-align:middle;
+}
+.date-hdr-count {
+  margin-left:12px;
+  background:rgba(255,255,255,.18);
+  padding:2px 10px;border-radius:20px;
+  font-size:11px;font-weight:600;
+  color:rgba(255,255,255,.85);
+}
+
+tbody td{padding:9px 14px;font-size:13px;border-right:1px solid var(--g2);vertical-align:middle}
+tbody td:last-child{border-right:none}
+.tc{text-align:center}.tr{text-align:right}
+.td-seq{font-size:12px;font-weight:700;color:var(--muted)}
+.td-date{font-size:12px;color:var(--sub);white-space:nowrap}
+.td-sec{font-weight:800;font-size:15px;color:var(--navy)}
+.td-rcpt{font-size:12px;font-weight:600;color:var(--accent);white-space:nowrap}
+.td-name{font-size:13px;line-height:1.5}
+.td-name .co{font-size:11px;color:var(--muted);margin-top:1px}
+.td-amt{text-align:right;font-weight:700;font-size:13px;white-space:nowrap}
+.td-total{text-align:right;font-weight:800;font-size:14px;color:var(--navy);white-space:nowrap}
+.td-grand{text-align:right;font-weight:800;font-size:15px;color:var(--gold2)}
+.td-ref{font-size:11px;color:var(--muted);text-align:center}
+
+/* payment badges */
+.pm{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;white-space:nowrap}
+.pm-cash   {background:#E8F5E9;color:#1E6B3C;border:1px solid #A5D6A7}
+.pm-cheque {background:#FEF5E7;color:#B8620A;border:1px solid #FAD7A0}
+.pm-edc    {background:#E3F2FD;color:#1565C0;border:1px solid #90CAF9}
+.pm-none{color:var(--g3);font-size:12px}
+
+/* ── PAGINATION ── */
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-top:1px solid var(--g2);font-size:12px;color:var(--sub)}
+.page-btns{display:flex;gap:4px}
+.pbtn{width:28px;height:28px;border-radius:6px;border:1.5px solid var(--g2);background:var(--g1);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;color:var(--text);transition:all .15s}
+.pbtn:hover{border-color:var(--accent);color:var(--accent)}
+.pbtn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+
+/* ── SIGN ROW ── */
+.sign-row{display:flex;justify-content:flex-end;gap:40px;padding:20px 28px 28px;border-top:2px solid var(--g2);margin-top:16px}
+.sign-box{text-align:center;min-width:160px}
+.sign-line{border-bottom:1px solid var(--text);padding-bottom:28px;margin-bottom:6px}
+.sign-lbl{font-size:11px;color:var(--sub)}
+.sign-name{font-size:12px;font-weight:700;margin-top:2px}
+.sign-pos{font-size:11px;color:var(--muted)}
+
+/* ── PRINT ── */
+@media print{
+  .topbar,.period-tabs,.filter-row,.tc-actions,.pagination{display:none!important}
+  .main{padding:0}body{background:#fff}
+  .stat-row{grid-template-columns:repeat(6,1fr)}
+  .chart-row{display:none}
+  @page{size:A4 landscape;margin:12mm 10mm}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="tb-brand">
+    <div class="tb-dot">ก</div>
+    <div class="tb-name">ระบบออกใบเสร็จ กรมสนับสนุนบริการสุขภาพ</div>
+  </div>
+  <div class="tb-div"></div>
+  <div class="tb-title">รายงานการจัดเก็บค่าปรับ</div>
+  <div class="tb-right">
+    <button class="tbtn tbtn-w" onclick="window.print()">🖨️ พิมพ์</button>
+    <button class="tbtn tbtn-w" onclick="exportCSV()">📥 Excel/CSV</button>
+    <button class="tbtn tbtn-g">📤 ส่งรายงาน</button>
+  </div>
+</header>
+
+<!-- PERIOD TABS -->
+<div class="period-tabs">
+  <div class="ptab active" id="tab-day" onclick="switchTab('day')">
+    <span class="ptab-icon">📅</span> รายวัน
+  </div>
+  <div class="ptab-div"></div>
+  <div class="ptab" id="tab-month" onclick="switchTab('month')">
+    <span class="ptab-icon">📆</span> รายเดือน
+  </div>
+  <div class="ptab-div"></div>
+  <div class="ptab" id="tab-year" onclick="switchTab('year')">
+    <span class="ptab-icon">📊</span> รายปี
+  </div>
+</div>
+
+<!-- FILTER ROW -->
+<div class="filter-row" id="filterRow">
+  <!-- filled by JS -->
+</div>
+
+<!-- MAIN -->
+<div class="main" id="mainContent">
+  <!-- STATS -->
+  <div class="stat-row">
+    <div class="stat-card c1">
+      <div class="sc-label" id="sl-count">จำนวนรายการ</div>
+      <div class="sc-val" id="sv-count">—</div>
+      <div class="sc-unit">รายการ</div>
+    </div>
+    <div class="stat-card c2">
+      <div class="sc-label">ยอดรวม</div>
+      <div class="sc-val" id="sv-total">—</div>
+      <div class="sc-unit">บาท</div>
+    </div>
+    <div class="stat-card c3">
+      <div class="sc-label">💵 เงินสด</div>
+      <div class="sc-val" id="sv-cash">—</div>
+      <div class="sc-unit">บาท</div>
+    </div>
+    <div class="stat-card c4">
+      <div class="sc-label">📝 เช็ค</div>
+      <div class="sc-val" id="sv-cheque">—</div>
+      <div class="sc-unit">บาท</div>
+    </div>
+    <div class="stat-card c5">
+      <div class="sc-label">💳 EDC</div>
+      <div class="sc-val" id="sv-edc">—</div>
+      <div class="sc-unit">บาท</div>
+    </div>
+    <div class="stat-card c6" style="visibility:hidden"></div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="chart-row">
+    <div class="chart-card">
+      <div class="chart-head">
+        <div class="ch-icon" style="background:#E8F2FB">📈</div>
+        <div>
+          <div class="ch-title" id="barChartTitle">ยอดค่าปรับรายวัน</div>
+          <div class="ch-sub">แยกตามช่องทางชำระเงิน</div>
+        </div>
+      </div>
+      <div class="chart-body"><canvas id="barChart" height="90"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-head">
+        <div class="ch-icon" style="background:#EAF7EE">🥧</div>
+        <div>
+          <div class="ch-title">สัดส่วนช่องทางชำระเงิน</div>
+          <div class="ch-sub">ตามช่วงเวลาที่เลือก</div>
+        </div>
+      </div>
+      <div class="chart-body"><canvas id="doughnutChart" height="155"></canvas></div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-card">
+    <div class="tc-head">
+      <div class="tc-title" id="tableTitle">รายงานรายวัน</div>
+      <span class="tc-badge" id="tableBadge">0 รายการ</span>
+      <div class="tc-actions">
+        <button class="tc-btn" onclick="window.print()">🖨️ พิมพ์</button>
+        <button class="tc-btn" onclick="exportCSV()">📥 Export</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <div id="pageInfo">แสดงทั้งหมด</div>
+      <div class="page-btns" id="pageBtns"></div>
+    </div>
+  </div>
+
+  <!-- SIGN -->
+  <div class="sign-row">
+    <div class="sign-box">
+      <div class="sign-line"></div>
+      <div class="sign-lbl">ผู้จัดทำรายงาน</div>
+      <div class="sign-name">(................................)</div>
+      <div class="sign-pos">เจ้าหน้าที่กองกฎหมาย</div>
+    </div>
+    <div class="sign-box">
+      <div class="sign-line"></div>
+      <div class="sign-lbl">ผู้ตรวจสอบ</div>
+      <div class="sign-name">(................................)</div>
+      <div class="sign-pos">หัวหน้างานการเงิน</div>
+    </div>
+    <div class="sign-box">
+      <div class="sign-line"></div>
+      <div class="sign-lbl">ผู้อนุมัติ</div>
+      <div class="sign-name">(................................)</div>
+      <div class="sign-pos">ผู้อำนวยการกองกฎหมาย</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── สร้าง demo data สัมพันธ์กับวันปัจจุบัน ──
+function daysAgo(n){
+  const d = new Date(); d.setDate(d.getDate()-n);
+  return d.toISOString().slice(0,10);
+}
+function receiptNo(n){ return `1831/${String(n).padStart(3,'0')}` }
+
+const rawData = [
+  // วันนี้
+  {date:daysAgo(0),section:'65',receipt:receiptNo(21),name:'บางประกอก เอ็มอาร์ไอ คลินิกเฉพาะทางฯ',company:'บริษัท บางประกอก ฮอสพิทอล กรุ๊ป จำกัด',amount:20000,payment:'เงินสด',ref:'สธ ๐๓๐๒.๐๖/๒๔๓'},
+  {date:daysAgo(0),section:'59',receipt:receiptNo(22),name:'คลินิกเวชกรรมเลอนิสต้า',company:'บริษัท เอ็นเฟดี เมดิคอล จำกัด',amount:10000,payment:'EDC',ref:'สธ ๐๓๐๒.๐๖/๒๔๔'},
+  {date:daysAgo(0),section:'34',receipt:receiptNo(23),name:'นครินทร์ โตเทียมคลินิกเฉพาะทางด้านเวชกรรมอายุศาสตร์โรคไต',company:'บริษัท ศูนย์ฟอกโตนครินทร์ จำกัด',amount:40000,payment:'เช็ค',ref:'สธ ๐๓๐๒.๐๖/๒๔๕'},
+  // เมื่อวาน
+  {date:daysAgo(1),section:'65',receipt:receiptNo(18),name:'โนวา คลินิกเวชกรรม สาขาลาดพร้าว',company:'',amount:50000,payment:'เงินสด',ref:'สธ ๐๓๐๒.๐๖/๒๓๘'},
+  {date:daysAgo(1),section:'61',receipt:receiptNo(19),name:'เมดิก้า เวลเนส คลินิก',company:'บริษัท เมดิก้า เฮลท์แคร์ จำกัด',amount:30000,payment:'EDC',ref:'สธ ๐๓๐๒.๐๖/๒๓๙'},
+  {date:daysAgo(1),section:'64',receipt:receiptNo(20),name:'ลักซ์ สปา & เวลเนส เซ็นเตอร์',company:'',amount:6000,payment:'เช็ค',ref:'สธ ๐๓๐๒.๐๖/๒๔๐'},
+  // 3 วันก่อน
+  {date:daysAgo(3),section:'68',receipt:receiptNo(15),name:'ซิตี้ เมดิคอล คลินิก สาขา 2',company:'บริษัท ซิตี้ เมดิคอล จำกัด',amount:25000,payment:'EDC',ref:'สธ ๐๓๐๒.๐๖/๒๓๐'},
+  {date:daysAgo(3),section:'59',receipt:receiptNo(16),name:'ไทยเวลเนส สปา แอนด์ นวด',company:'บริษัท ไทยเวลเนส จำกัด',amount:8000,payment:'เงินสด',ref:'สธ ๐๓๐๒.๐๖/๒๓๑'},
+  {date:daysAgo(3),section:'65',receipt:receiptNo(17),name:'อารีย์ คลินิกเวชกรรม สาขาพระราม 9',company:'บริษัท อารีย์ เมดิคอล กรุ๊ป จำกัด',amount:75000,payment:'เช็ค',ref:'สธ ๐๓๐๒.๐๖/๒๓๒'},
+  // 5 วันก่อน
+  {date:daysAgo(5),section:'64',receipt:receiptNo(13),name:'ราชเทวี เมดิคอล คลินิก',company:'บริษัท ราชเทวี เมดิคอล จำกัด',amount:60000,payment:'เช็ค',ref:'สธ ๐๓๐๒.๐๖/๒๒๐'},
+  {date:daysAgo(5),section:'61',receipt:receiptNo(14),name:'วิภาวดี สปา & เวลเนส',company:'',amount:7500,payment:'เงินสด',ref:'สธ ๐๓๐๒.๐๖/๒๒๑'},
+  // 7 วันก่อน (อยู่ใน range "7 วัน" พอดี)
+  {date:daysAgo(6),section:'65',receipt:receiptNo(11),name:'แกรนด์ เมดิคอล คลินิก สาขาสีลม',company:'บริษัท แกรนด์ เมดิคอล กรุ๊ป จำกัด',amount:100000,payment:'เช็ค',ref:'สธ ๐๓๐๒.๐๖/๒๑๐'},
+  {date:daysAgo(6),section:'59',receipt:receiptNo(12),name:'พรีเมียร์ เมดิคอล คลินิก',company:'บริษัท พรีเมียร์ เมดิคอล กรุ๊ป จำกัด',amount:15000,payment:'EDC',ref:'สธ ๐๓๐๒.๐๖/๒๑๑'},
+  // ต้นเดือน (อยู่ใน range "เดือนนี้" แต่เกิน 7 วัน)
+  {date:daysAgo(15),section:'65',receipt:receiptNo(8),name:'ทองหล่อ เมดิคอล',company:'บริษัท ทองหล่อ เมดิคอล จำกัด',amount:90000,payment:'เช็ค',ref:'สธ ๐๓๐๒.๐๖/๑๙๕'},
+  {date:daysAgo(15),section:'64',receipt:receiptNo(9),name:'เอกมัย คลินิกเวชกรรม',company:'',amount:30000,payment:'เงินสด',ref:'สธ ๐๓๐๒.๐๖/๑๙๖'},
+  {date:daysAgo(15),section:'59',receipt:receiptNo(10),name:'บางนา เวลเนส สปา',company:'บริษัท บางนา เวลเนส จำกัด',amount:14000,payment:'EDC',ref:'สธ ๐๓๐๒.๐๖/๑๙๗'},
+  // เดือนก่อน (อยู่ใน range "ทั้งหมด" เท่านั้น)
+  {date:daysAgo(35),section:'65',receipt:'1830/005',name:'เฮลท์แลนด์ สปา สาขาสุขุมวิท',company:'บริษัท เฮลท์แลนด์ จำกัด',amount:80000,payment:'เช็ค',ref:'สธ ๐๓๐๒.๐๖/๑๕๐'},
+  {date:daysAgo(35),section:'61',receipt:'1830/006',name:'สยาม เวลเนส คลินิก',company:'',amount:9000,payment:'เงินสด',ref:'สธ ๐๓๐๒.๐๖/๑๕๑'},
+  {date:daysAgo(40),section:'64',receipt:'1830/003',name:'ไลฟ์ เวลเนส คลินิก',company:'',amount:35000,payment:'EDC',ref:'สธ ๐๓๐๒.๐๖/๑๓๐'},
+  {date:daysAgo(40),section:'61',receipt:'1830/004',name:'บิวตี้ คลินิก สาขาสีลม',company:'บริษัท บิวตี้ เฮลท์ จำกัด',amount:12000,payment:'EDC',ref:'สธ ๐๓๐๒.๐๖/๑๓๑'},
+  {date:daysAgo(50),section:'59',receipt:'1829/004',name:'ลาดพร้าว เวลเนส เซ็นเตอร์',company:'',amount:11000,payment:'เงินสด',ref:'สธ ๐๓๐๒.๐๖/๑๐๕'},
+  {date:daysAgo(60),section:'65',receipt:'1829/001',name:'ราชเทวี เมดิคอล คลินิก สาขา 2',company:'บริษัท ราชเทวี เมดิคอล จำกัด',amount:60000,payment:'เช็ค',ref:'สธ ๐๓๐๒.๐๖/๐๘๐'},
+  {date:daysAgo(60),section:'59',receipt:'1829/002',name:'พระราม 9 คลินิกเวชกรรม',company:'บริษัท พระราม 9 เมดิคอล จำกัด',amount:45000,payment:'EDC',ref:'สธ ๐๓๐๒.๐๖/๐๘๑'},
+  {date:daysAgo(75),section:'65',receipt:'1828/001',name:'โนวา คลินิกเวชกรรม สาขารังสิต',company:'',amount:20000,payment:'เงินสด',ref:'สธ ๐๓๐๒.๐๖/๐๕๕'},
+  {date:daysAgo(75),section:'34',receipt:'1828/002',name:'แกรนด์ เมดิคอล คลินิก สาขาอ่อนนุช',company:'บริษัท แกรนด์ เมดิคอล กรุ๊ป จำกัด',amount:40000,payment:'เช็ค',ref:'สธ ๐๓๐๒.๐๖/๐๕๖'},
+];
+
+// ── STATE ──
+let currentTab = 'day';
+let barChart = null;
+let doughnutChart = null;
+
+const pmClass  = {'เงินสด':'pm-cash','เช็ค':'pm-cheque','EDC':'pm-edc'};
+const pmKeys   = ['เงินสด','เช็ค','EDC'];
+const pmColors = ['#1E6B3C','#B8620A','#1565C0'];
+const pmBg     = ['rgba(30,107,60,.15)','rgba(184,98,10,.15)','rgba(21,101,192,.15)'];
+
+function fmt(n){ return Number(n||0).toLocaleString('th-TH',{minimumFractionDigits:2}) }
+function fmtK(n){ return n>=1000000?(n/1000000).toFixed(1)+'M':n>=1000?(n/1000).toFixed(0)+'K':n.toLocaleString('th-TH') }
+
+function getMonth(d){ return d.slice(0,7) }
+function getYear(d){ return d.slice(0,4) }
+
+const thMonths = ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.']
+const thMonthsFull = ['','มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม']
+function thDate(d){
+  const p=d.split('-'); const y=parseInt(p[0])+543; const m=parseInt(p[1]); const day=parseInt(p[2]);
+  return `${day} ${thMonths[m]} ${y}`
+}
+function thMonth(ym){
+  const p=ym.split('-'); return `${thMonthsFull[parseInt(p[1])]} ${parseInt(p[0])+543}`
+}
+function thYear(y){ return `พ.ศ. ${parseInt(y)+543}` }
+
+// ── TAB SWITCH ──
+function switchTab(tab){
+  currentTab = tab;
+  ['day','month','year'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab)
+  });
+  buildFilter();
+  renderReport();
+}
+
+// ── FILTER BUILD ──
+function todayISO(){
+  // simulate today as latest date in data (for demo); in production use: return new Date().toISOString().slice(0,10)
+  return new Date().toISOString().slice(0,10);
+}
+function firstOfMonth(iso){
+  return iso.slice(0,7) + '-01';
+}
+
+function buildFilter(){
+  const fr = document.getElementById('filterRow');
+  if(currentTab==='day'){
+    const today = todayISO();
+    const monthStart = firstOfMonth(today);
+    fr.innerHTML = `
+      <div class="fg">
+        <div class="fl">ตั้งแต่วันที่</div>
+        <input class="fi" type="date" id="fDateFrom" value="${monthStart}" style="min-width:140px">
+      </div>
+      <div style="padding-bottom:6px;color:var(--sub);font-size:13px;align-self:flex-end;padding-bottom:7px">—</div>
+      <div class="fg">
+        <div class="fl">ถึงวันที่</div>
+        <input class="fi" type="date" id="fDateTo" value="${today}" style="min-width:140px">
+      </div>
+      <div class="fg">
+        <div class="fl">ด่วน</div>
+        <div style="display:flex;gap:6px;height:34px;align-items:center">
+          <button class="qbtn" onclick="setRange('today')">วันนี้</button>
+          <button class="qbtn" onclick="setRange('week')">7 วัน</button>
+          <button class="qbtn" onclick="setRange('month')">เดือนนี้</button>
+          <button class="qbtn" onclick="setRange('all')">ทั้งหมด</button>
+        </div>
+      </div>
+      <div class="fg">
+        <div class="fl">ช่องทางชำระ</div>
+        <select class="fs" id="fPay">
+          <option value="">ทั้งหมด</option>${pmKeys.map(p=>`<option value="${p}">${p}</option>`).join('')}
+        </select>
+      </div>
+      <div class="fg">
+        <div class="fl">มาตรา</div>
+        <select class="fs" id="fSec">
+          <option value="">ทั้งหมด</option>
+          ${[...new Set(rawData.map(r=>r.section))].sort((a,b)=>+a-+b).map(s=>`<option value="${s}">${s}</option>`).join('')}
+        </select>
+      </div>
+      <div class="fg">
+        <div class="fl">เรียงลำดับ</div>
+        <select class="fs" id="fSort" style="min-width:120px">
+          <option value="asc">วันเก่า → ใหม่</option>
+          <option value="desc">วันใหม่ → เก่า</option>
+        </select>
+      </div>
+      <div class="fg">
+        <div class="fl">ค้นหา</div>
+        <input class="fi" type="text" id="fQ" placeholder="ชื่อสถานพยาบาล / ใบเสร็จ…">
+      </div>
+      <button class="fbtn fbtn-a" onclick="renderReport()">🔍 แสดง</button>
+      <button class="fbtn fbtn-c" onclick="clearF()">ล้าง</button>`;
+  } else if(currentTab==='month'){
+    const years = [...new Set(rawData.map(r=>getYear(r.date)))].sort().reverse();
+    fr.innerHTML = `
+      <div class="fg"><div class="fl">ปี</div>
+        <select class="fs" id="fYear">
+          ${years.map(y=>`<option value="${y}">${thYear(y)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="fg"><div class="fl">ช่องทางชำระ</div>
+        <select class="fs" id="fPay">
+          <option value="">ทั้งหมด</option>${pmKeys.map(p=>`<option value="${p}">${p}</option>`).join('')}
+        </select>
+      </div>
+      <button class="fbtn fbtn-a" onclick="renderReport()">🔍 แสดง</button>
+      <button class="fbtn fbtn-c" onclick="clearF()">ล้าง</button>`;
+  } else {
+    fr.innerHTML = `
+      <div class="fg"><div class="fl">ช่องทางชำระ</div>
+        <select class="fs" id="fPay">
+          <option value="">ทั้งหมด</option>${pmKeys.map(p=>`<option value="${p}">${p}</option>`).join('')}
+        </select>
+      </div>
+      <button class="fbtn fbtn-a" onclick="renderReport()">🔍 แสดง</button>
+      <button class="fbtn fbtn-c" onclick="clearF()">ล้าง</button>`;
+  }
+}
+
+function setRange(type){
+  const today = todayISO();
+  let from = today;
+  if(type==='today'){ from=today; }
+  else if(type==='week'){
+    const d=new Date(); d.setDate(d.getDate()-6);
+    from=d.toISOString().slice(0,10);
+  }
+  else if(type==='month'){ from=firstOfMonth(today); }
+  else if(type==='all'){
+    const allDates=rawData.map(r=>r.date).sort();
+    from=allDates[0];
+  }
+  const df=document.getElementById('fDateFrom');
+  const dt=document.getElementById('fDateTo');
+  if(df) df.value=from;
+  if(dt) dt.value=today;
+  renderReport();
+}
+
+function clearF(){
+  const today=todayISO();
+  ['fPay','fSec','fYear','fQ'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  const df=document.getElementById('fDateFrom'); if(df) df.value=firstOfMonth(today);
+  const dt=document.getElementById('fDateTo');   if(dt) dt.value=today;
+  const fs=document.getElementById('fSort');     if(fs) fs.value='asc';
+  renderReport();
+}
+
+// ── RENDER ──
+function renderReport(){
+  if(currentTab==='day') renderDay();
+  else if(currentTab==='month') renderMonth();
+  else renderYear();
+}
+
+// ── DAY ──
+function renderDay(){
+  const dateFrom = document.getElementById('fDateFrom')?.value || firstOfMonth(todayISO());
+  const dateTo   = document.getElementById('fDateTo')?.value   || todayISO();
+  const pay      = document.getElementById('fPay')?.value || '';
+  const sec      = document.getElementById('fSec')?.value || '';
+  const sort     = document.getElementById('fSort')?.value || 'asc';
+  const q        = (document.getElementById('fQ')?.value||'').toLowerCase();
+
+  let data = rawData.filter(r => r.date >= dateFrom && r.date <= dateTo);
+  if(pay) data=data.filter(r=>r.payment===pay);
+  if(sec) data=data.filter(r=>r.section===sec);
+  if(q)   data=data.filter(r=>r.name.toLowerCase().includes(q)||r.receipt.includes(q));
+
+  // label for title
+  const fromTh = thDate(dateFrom);
+  const toTh   = thDate(dateTo);
+  const periodLabel = dateFrom===dateTo ? fromTh : `${fromTh} — ${toTh}`;
+  document.getElementById('tableTitle').textContent = 'รายงานรายวัน — ' + periodLabel;
+  document.getElementById('barChartTitle').textContent = 'ยอดค่าปรับรายวัน — ' + periodLabel;
+
+  updateStats(data);
+
+  // group by date
+  const byDate = {};
+  data.forEach(r=>{ if(!byDate[r.date])byDate[r.date]=[]; byDate[r.date].push(r); });
+  const dates = Object.keys(byDate).sort((a,b)=> sort==='asc' ? a.localeCompare(b) : b.localeCompare(a));
+
+  // chart — always show asc for readability
+  const datesAsc = [...dates].sort();
+  const barLabels = datesAsc.map(d=>thDate(d));
+  const barDatasets = pmKeys.map((pm,i)=>({
+    label: pm,
+    data: datesAsc.map(d=>byDate[d].filter(r=>r.payment===pm).reduce((s,r)=>s+r.amount,0)),
+    backgroundColor: pmBg[i], borderColor: pmColors[i], borderWidth: 2,
+  }));
+  renderBarChart(barLabels, barDatasets);
+  renderDoughnut(data);
+
+  // table head — สไตล์ราชการ ตามต้นฉบับ
+  document.getElementById('tableHead').innerHTML = `
+    <tr>
+      <th style="width:52px">ลำดับที่</th>
+      <th style="width:96px">วันที่</th>
+      <th style="width:110px">เลขที่หนังสือ<br>อ้างอิง</th>
+      <th style="width:62px">มาตรา</th>
+      <th style="width:100px">เลขที่<br>ใบเสร็จ</th>
+      <th>รายการ</th>
+      <th style="width:72px">ช่องทาง<br>ชำระเงิน</th>
+      <th style="width:124px">ค่าปรับรวม<br>(บาท)</th>
+    </tr>`;
+
+  if(data.length===0){
+    document.getElementById('tableBody').innerHTML=`<tr><td colspan="7" style="text-align:center;padding:44px;color:var(--muted);font-size:13px">📭 ไม่พบรายการในช่วงวันที่ที่เลือก</td></tr>`;
+    setBadge(0); return;
+  }
+
+  let html=''; let seq=1;
+  dates.forEach(date=>{
+    const rows = byDate[date];
+    const dayTotal = rows.reduce((s,r)=>s+r.amount,0);
+
+    // ── DATA ROWS ──
+    rows.forEach(r=>{
+      const pmBadge = `<span class="pm ${pmClass[r.payment]}" style="font-size:11px">${r.payment}</span>`;
+      html+=`<tr>
+        <td class="td-seq tc">${seq++}</td>
+        <td class="td-date tc">${thDate(r.date)}</td>
+        <td class="td-ref tc" style="font-size:12px">${r.ref}</td>
+        <td class="td-sec tc">${r.section}</td>
+        <td class="td-rcpt tc">${r.receipt}</td>
+        <td class="td-name">${r.name}${r.company?`<div class="co">${r.company}</div>`:''}</td>
+        <td class="tc">${pmBadge}</td>
+        <td class="td-amt">${fmt(r.amount)}</td>
+      </tr>`;
+    });
+  });
+
+  // ── GRAND TOTAL ──
+  const grand=data.reduce((s,r)=>s+r.amount,0);
+  html+=`<tr class="row-grand">
+    <td colspan="6" class="tc" style="font-size:13px;letter-spacing:.5px">
+      ยอดรวมทั้งหมด &nbsp;<span style="opacity:.65;font-size:12px">${data.length} รายการ</span>
+    </td>
+    <td></td>
+    <td class="td-grand">${fmt(grand)}</td>
+  </tr>`;
+
+  document.getElementById('tableBody').innerHTML=html;
+  setBadge(data.length);
+}
+
+// ── MONTH ──
+function renderMonth(){
+  const year = document.getElementById('fYear')?.value || getYear(rawData[0].date);
+  const pay  = document.getElementById('fPay')?.value || '';
+
+  let data = rawData.filter(r=>getYear(r.date)===year);
+  if(pay) data=data.filter(r=>r.payment===pay);
+
+  document.getElementById('tableTitle').textContent = 'รายงานรายเดือน — ' + thYear(year);
+  document.getElementById('barChartTitle').textContent = 'ยอดค่าปรับรายเดือน — ' + thYear(year);
+
+  updateStats(data);
+
+  const byMonth={};
+  data.forEach(r=>{ const m=getMonth(r.date); if(!byMonth[m])byMonth[m]=[]; byMonth[m].push(r); });
+  const months=Object.keys(byMonth).sort();
+
+  const barLabels = months.map(m=>thMonth(m));
+  const barDatasets = pmKeys.map((pm,i)=>({
+    label:pm,
+    data: months.map(m=>byMonth[m].filter(r=>r.payment===pm).reduce((s,r)=>s+r.amount,0)),
+    backgroundColor:pmBg[i],borderColor:pmColors[i],borderWidth:2,
+  }));
+  renderBarChart(barLabels, barDatasets);
+  renderDoughnut(data);
+
+  document.getElementById('tableHead').innerHTML = `
+    <tr>
+      <th style="width:44px">ลำดับ</th>
+      <th>เดือน</th>
+      <th style="width:72px">จำนวนรายการ</th>
+      <th style="width:120px">💵 เงินสด (บาท)</th>
+      <th style="width:120px">📝 เช็ค (บาท)</th>
+      <th style="width:120px">💳 EDC (บาท)</th>
+      <th style="width:130px">รวมค่าปรับ (บาท)</th>
+    </tr>`;
+
+  let html='';
+  months.forEach((m,i)=>{
+    const rows=byMonth[m]; const sub=rows.reduce((s,r)=>s+r.amount,0);
+    const pmVals=pmKeys.map(pm=>rows.filter(r=>r.payment===pm).reduce((s,r)=>s+r.amount,0));
+    html+=`<tr class="row-month">
+      <td class="td-seq tc">${i+1}</td>
+      <td style="font-weight:700;font-size:14px;color:var(--navy)">${thMonth(m)}</td>
+      <td class="tc" style="font-size:13px">${rows.length} รายการ</td>
+      ${pmVals.map(v=>`<td class="tr">${v?fmt(v):'<span class="pm-none">—</span>'}</td>`).join('')}
+      <td class="td-total">${fmt(sub)}</td>
+    </tr>`;
+  });
+  appendGrand(html, data, 8);
+  setBadge(months.length + ' เดือน');
+}
+
+// ── YEAR ──
+function renderYear(){
+  const pay = document.getElementById('fPay')?.value||'';
+  let data = pay ? rawData.filter(r=>r.payment===pay) : [...rawData];
+
+  document.getElementById('tableTitle').textContent = 'รายงานรายปี';
+  document.getElementById('barChartTitle').textContent = 'ยอดค่าปรับรายปี';
+
+  updateStats(data);
+
+  const byYear={};
+  data.forEach(r=>{ const y=getYear(r.date); if(!byYear[y])byYear[y]=[]; byYear[y].push(r); });
+  const years=Object.keys(byYear).sort().reverse();
+
+  const byMonth2={};
+  data.forEach(r=>{ const m=getMonth(r.date); if(!byMonth2[m])byMonth2[m]=[]; byMonth2[m].push(r); });
+  const allMonths=Object.keys(byMonth2).sort();
+
+  const barLabels=allMonths.map(m=>{const p=m.split('-');return `${thMonths[parseInt(p[1])]} ${parseInt(p[0])+543}`});
+  const barDatasets=pmKeys.map((pm,i)=>({
+    label:pm,
+    data:allMonths.map(m=>byMonth2[m].filter(r=>r.payment===pm).reduce((s,r)=>s+r.amount,0)),
+    backgroundColor:pmBg[i],borderColor:pmColors[i],borderWidth:2,
+  }));
+  renderBarChart(barLabels,barDatasets);
+  renderDoughnut(data);
+
+  document.getElementById('tableHead').innerHTML = `
+    <tr>
+      <th style="width:44px">ลำดับ</th>
+      <th>ปีงบประมาณ</th>
+      <th style="width:72px">จำนวนรายการ</th>
+      <th style="width:120px">💵 เงินสด (บาท)</th>
+      <th style="width:120px">📝 เช็ค (บาท)</th>
+      <th style="width:120px">💳 EDC (บาท)</th>
+      <th style="width:130px">รวมค่าปรับ (บาท)</th>
+    </tr>`;
+
+  let html='';
+  years.forEach((y,i)=>{
+    const rows=byYear[y]; const sub=rows.reduce((s,r)=>s+r.amount,0);
+    const pmVals=pmKeys.map(pm=>rows.filter(r=>r.payment===pm).reduce((s,r)=>s+r.amount,0));
+    html+=`<tr class="row-month">
+      <td class="td-seq tc">${i+1}</td>
+      <td style="font-weight:700;font-size:15px;color:var(--navy)">${thYear(y)}</td>
+      <td class="tc">${rows.length} รายการ</td>
+      ${pmVals.map(v=>`<td class="tr">${v?fmt(v):'<span class="pm-none">—</span>'}</td>`).join('')}
+      <td class="td-total">${fmt(sub)}</td>
+    </tr>`;
+  });
+  appendGrand(html, data, 8);
+  setBadge(years.length + ' ปี');
+}
+
+function appendGrand(html, data, cols){
+  const grand=data.reduce((s,r)=>s+r.amount,0);
+  const pmVals=pmKeys.map(pm=>data.filter(r=>r.payment===pm).reduce((s,r)=>s+r.amount,0));
+  const pmCols=pmVals.map(v=>`<td class="tr" style="font-weight:700">${v?fmt(v):'—'}</td>`).join('');
+  if(cols===11){
+    html+=`<tr class="row-grand">
+      <td colspan="4" class="tc" style="font-size:13px;letter-spacing:.5px">ยอดรวมทั้งหมด</td>
+      <td style="font-size:12px;opacity:.7">${data.length} รายการ</td>
+      ${pmCols}
+      <td class="td-grand">${fmt(grand)}</td><td></td>
+    </tr>`;
+  } else {
+    html+=`<tr class="row-grand">
+      <td colspan="2" class="tc" style="font-size:13px;letter-spacing:.5px">ยอดรวมทั้งหมด</td>
+      <td class="tc" style="opacity:.7">${data.length} รายการ</td>
+      ${pmCols}
+      <td class="td-grand">${fmt(grand)}</td>
+    </tr>`;
+  }
+  document.getElementById('tableBody').innerHTML=html;
+}
+
+function setBadge(n){ document.getElementById('tableBadge').textContent = typeof n==='number'? n+' รายการ': n; }
+
+function updateStats(data){
+  const total=data.reduce((s,r)=>s+r.amount,0);
+  document.getElementById('sv-count').textContent=data.length;
+  document.getElementById('sv-total').textContent=fmtK(total);
+  pmKeys.forEach((pm,i)=>{
+    const keys=['sv-cash','sv-cheque','sv-edc'];
+    const v=data.filter(r=>r.payment===pm).reduce((s,r)=>s+r.amount,0);
+    document.getElementById(keys[i]).textContent=fmtK(v)||'—';
+  });
+}
+
+// ── CHARTS ──
+function renderBarChart(labels, datasets){
+  const ctx=document.getElementById('barChart').getContext('2d');
+  if(barChart){barChart.destroy();barChart=null;}
+  barChart=new Chart(ctx,{
+    type:'bar',
+    data:{labels,datasets},
+    options:{
+      responsive:true,
+      plugins:{legend:{labels:{font:{family:'Sarabun',size:11},color:'#546E7A'}}},
+      scales:{
+        x:{ticks:{font:{family:'Sarabun',size:11},color:'#546E7A'},grid:{display:false}},
+        y:{ticks:{font:{family:'Sarabun',size:11},color:'#546E7A',callback:v=>fmtK(v)},grid:{color:'rgba(0,0,0,.05)'}},
+      }
+    }
+  });
+}
+
+function renderDoughnut(data){
+  const ctx=document.getElementById('doughnutChart').getContext('2d');
+  if(doughnutChart){doughnutChart.destroy();doughnutChart=null;}
+  const vals=pmKeys.map(pm=>data.filter(r=>r.payment===pm).reduce((s,r)=>s+r.amount,0));
+  doughnutChart=new Chart(ctx,{
+    type:'doughnut',
+    data:{labels:pmKeys,datasets:[{data:vals,backgroundColor:pmColors.map(c=>c+'CC'),borderColor:pmColors,borderWidth:2}]},
+    options:{
+      responsive:true,cutout:'65%',
+      plugins:{
+        legend:{position:'bottom',labels:{font:{family:'Sarabun',size:11},color:'#546E7A',padding:10}},
+        tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${fmt(ctx.raw)} บาท`}}
+      }
+    }
+  });
+}
+
+function exportCSV(){
+  const rows=currentTab==='day'
+    ? rawData.map(r=>[r.date,r.section,r.receipt,r.name,r.company,r.payment,r.amount,r.ref])
+    : rawData.map(r=>[r.date,r.amount,r.payment]);
+  const csv=[['วันที่','มาตรา','ใบเสร็จ','ชื่อ','บริษัท','ช่องทาง','ยอด','อ้างอิง'],...rows]
+    .map(r=>r.map(c=>'"'+String(c||'').replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='รายงานค่าปรับ.csv';a.click();
+}
+
+// INIT
+buildFilter();
+renderReport();
+</script>
+</body>
+</html>

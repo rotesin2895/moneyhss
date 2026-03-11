@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ระบบคลัง กสพ. — หัวหน้าฝ่ายคลัง</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0b2040;
+  --navy2:#0f2d55;
+  --teal:#0a7c73;--teal2:#0d9e93;--teal3:#14c4b6;
+  --teal-l:#edfcfb;--teal-m:#b2f0ea;
+  --blue:#1a56db;--blue-l:#ebf5ff;--blue-m:#c3ddfd;
+  --green:#057a55;--green-l:#f3faf7;--green-m:#bcf0da;
+  --amber:#b45309;--amber-l:#fffbeb;--amber-m:#fcd34d;
+  --red:#c81e1e;--red-l:#fdf2f2;--red-m:#f8b4b4;
+  --slate:#475569;--slate-l:#f8fafc;--slate-m:#e2e8f0;
+  --bg:#f0f5f4;--card:#fff;--border:#e2e8f0;--border2:#cbd5e1;
+  --tx1:#0b1f38;--tx2:#334155;--tx3:#64748b;--tx4:#94a3b8;
+  --sw:254px;--th:58px;
+  --s1:0 1px 2px rgba(11,31,56,.06);
+  --s2:0 1px 3px rgba(11,31,56,.08),0 4px 12px rgba(11,31,56,.05);
+  --s3:0 4px 16px rgba(11,31,56,.1),0 1px 4px rgba(11,31,56,.06);
+  --s4:0 12px 40px rgba(11,31,56,.16),0 2px 8px rgba(11,31,56,.06);
+}
+html,body{height:100%;font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--tx1);font-size:14px;overflow:hidden}
+
+/* TOPBAR */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--th);background:var(--navy);border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;padding:0 0 0 20px}
+.tb-brand{display:flex;align-items:center;gap:10px;width:var(--sw);flex-shrink:0;padding-right:16px}
+.tb-mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--teal),var(--teal2));display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono';font-size:11px;font-weight:700;color:#fff;box-shadow:0 2px 8px rgba(10,124,115,.45);flex-shrink:0}
+.tb-title{font-size:13px;font-weight:700;color:#fff}.tb-sub{font-size:10px;color:rgba(255,255,255,.35)}
+.tb-sep{width:1px;height:28px;background:rgba(255,255,255,.07)}
+.tb-crumb{display:flex;align-items:center;gap:6px;padding:0 20px;font-size:12.5px;color:rgba(255,255,255,.38)}
+.tb-crumb .cur{color:rgba(255,255,255,.88);font-weight:600}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:6px;padding:0 16px}
+.tbtn{width:34px;height:34px;border-radius:8px;cursor:pointer;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:15px;position:relative;transition:background .15s}
+.tbtn:hover{background:rgba(255,255,255,.11)}
+.nbadge{position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:var(--red);color:#fff;font-size:8px;font-weight:700;font-family:'IBM Plex Mono';display:flex;align-items:center;justify-content:center;border:2px solid var(--navy)}
+.tb-user{display:flex;align-items:center;gap:8px;padding:5px 10px 5px 6px;border-radius:8px;cursor:pointer;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);transition:background .15s}
+.tb-user:hover{background:rgba(255,255,255,.1)}
+.tb-av{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,var(--teal),var(--teal2));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff}
+.tb-un{font-size:12px;font-weight:600;color:rgba(255,255,255,.82)}
+.tb-rb{font-size:9px;font-weight:700;font-family:'IBM Plex Mono';background:rgba(10,124,115,.4);color:#5eead4;padding:1px 6px;border-radius:4px}
+
+/* SIDEBAR */
+#sidebar{position:fixed;top:var(--th);left:0;bottom:0;z-index:100;width:var(--sw);background:var(--navy2);border-right:1px solid rgba(255,255,255,.04);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
+#sidebar::-webkit-scrollbar{width:3px}
+#sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.06)}
+.sg{padding:14px 0 4px}
+.sgl{padding:0 18px 5px;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.18)}
+.sl{display:flex;align-items:center;gap:9px;padding:9px 14px 9px 18px;margin:1px 8px;border-radius:7px;cursor:pointer;transition:all .14s;color:rgba(255,255,255,.42);font-size:13px;font-weight:500;border-left:3px solid transparent}
+.sl:hover{color:rgba(255,255,255,.78);background:rgba(255,255,255,.05)}
+.sl.on{color:#fff;font-weight:600;background:rgba(10,124,115,.2);border-left-color:var(--teal2)}
+.sl-ico{font-size:15px;width:20px;text-align:center;flex-shrink:0;opacity:.6}
+.sl.on .sl-ico{opacity:1}
+.sl-txt{flex:1}
+.sp{padding:1px 7px;border-radius:10px;font-size:9px;font-weight:700;font-family:'IBM Plex Mono'}
+.sp-r{background:rgba(200,30,30,.22);color:#fca5a5}
+.sdiv{height:1px;background:rgba(255,255,255,.05);margin:6px 18px}
+.sb-bot{margin-top:auto;padding:12px;border-top:1px solid rgba(255,255,255,.05)}
+.pc{background:rgba(10,124,115,.12);border:1px solid rgba(10,124,115,.22);border-radius:9px;padding:10px 12px;margin-bottom:10px}
+.pc-name{font-size:13px;font-weight:700;color:#fff}
+.pc-role{font-size:11px;font-weight:600;color:var(--teal2);margin-top:2px}
+.pc-dept{font-size:10px;color:rgba(255,255,255,.3);margin-top:1px}
+.btn-lo{width:100%;padding:8px;border-radius:8px;background:rgba(200,30,30,.08);border:1px solid rgba(200,30,30,.15);color:rgba(252,165,165,.75);font-family:'Sarabun';font-size:12px;font-weight:600;cursor:pointer;transition:all .18s}
+.btn-lo:hover{background:rgba(200,30,30,.14)}
+
+/* MAIN */
+#main{position:fixed;top:var(--th);left:var(--sw);right:0;bottom:0;overflow-y:auto;overflow-x:hidden;background:var(--bg)}
+#main::-webkit-scrollbar{width:5px}
+#main::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.pg{display:none;padding:24px;animation:pgIn .22s ease both}
+.pg.on{display:block}
+@keyframes pgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* PAGE HEADER */
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.ph-t{font-size:21px;font-weight:800;letter-spacing:-.3px;color:var(--tx1)}
+.ph-s{font-size:12px;color:var(--tx3);margin-top:3px}
+.ph-a{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-family:'Sarabun';font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:all .15s;white-space:nowrap}
+.btn:active{transform:scale(.98)}
+.btn-p{background:var(--teal);color:#fff;border-color:var(--teal)}
+.btn-p:hover{background:var(--teal2);box-shadow:0 2px 12px rgba(10,124,115,.35)}
+.btn-o{background:var(--card);color:var(--tx2);border-color:var(--border2)}
+.btn-o:hover{background:var(--slate-l)}
+.btn-g{background:var(--green-l);color:var(--green);border-color:var(--green-m)}
+.btn-g:hover{background:#a7f3d0}
+.btn-r{background:var(--red-l);color:var(--red);border-color:var(--red-m)}
+.btn-r:hover{background:#fecaca}
+.btn-a{background:var(--amber-l);color:var(--amber);border-color:var(--amber-m)}
+.btn-sm{padding:5px 12px;font-size:12px;border-radius:7px}
+.btn-xs{padding:3px 9px;font-size:11px;border-radius:6px}
+
+/* CARDS */
+.card{background:var(--card);border-radius:14px;border:1px solid var(--border);box-shadow:var(--s2)}
+.ch{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.ct{font-size:14px;font-weight:700;color:var(--tx1)}
+.cs{font-size:11px;color:var(--tx3);margin-top:1px}
+.cb{padding:20px}
+
+/* STAT CARDS */
+.sg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:14px;margin-bottom:20px}
+.sc{background:var(--card);border-radius:14px;border:1px solid var(--border);box-shadow:var(--s1);padding:18px 20px;transition:transform .18s,box-shadow .18s;overflow:hidden}
+.sc:hover{transform:translateY(-2px);box-shadow:var(--s3)}
+.sc.ct{border-left:3px solid var(--teal2)}
+.sc.cg{border-left:3px solid var(--green)}
+.sc.ca{border-left:3px solid var(--amber)}
+.sc.cr{border-left:3px solid var(--red)}
+.sc.cb2{border-left:3px solid var(--blue)}
+.sc-ico{font-size:22px;margin-bottom:8px}
+.sc-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3)}
+.sc-val{font-size:26px;font-weight:800;font-family:'IBM Plex Mono';color:var(--tx1);line-height:1.1;margin:4px 0}
+.sc-hint{font-size:11px;color:var(--tx4)}
+
+/* BADGES */
+.bdg{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;font-family:'IBM Plex Mono';white-space:nowrap}
+.bt{background:var(--teal-m);color:#0a7c73}
+.bb{background:var(--blue-m);color:#1e40af}
+.bg{background:var(--green-m);color:#03543f}
+.ba{background:var(--amber-l);color:var(--amber);border:1px solid var(--amber-m)}
+.br{background:var(--red-m);color:var(--red)}
+.bs{background:var(--slate-m);color:var(--slate)}
+.bn{background:#dbeafe;color:#1e3a8a}
+
+/* TABLE */
+.tw{overflow-x:auto;border-radius:14px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;background:var(--card)}
+thead th{background:#f8fafc;padding:10px 14px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx3);border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
+thead th:first-child{padding-left:18px}
+tbody td{padding:12px 14px;border-bottom:1px solid #f1f5f9;font-size:13px;color:var(--tx2);vertical-align:middle}
+tbody td:first-child{padding-left:18px}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#f8fbfa}
+
+/* FORM */
+.fg{margin-bottom:14px}
+label{display:block;font-size:12px;font-weight:700;color:var(--tx2);margin-bottom:5px}
+.req{color:var(--red);margin-left:2px}
+.inp{width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border2);background:#fff;font-family:'Sarabun';font-size:13px;color:var(--tx1);outline:none;transition:border-color .17s,box-shadow .17s}
+.inp:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(10,124,115,.1)}
+.inp[readonly]{background:#f8fafc;color:var(--tx3);cursor:default}
+select.inp{cursor:pointer}
+textarea.inp{resize:vertical;min-height:76px;line-height:1.6}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.r3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.ig{display:flex}
+.ig .inp{border-radius:8px 0 0 8px;border-right:none}
+.ig-addon{padding:9px 12px;background:#f8fafc;border:1.5px solid var(--border2);border-left:none;border-radius:0 8px 8px 0;font-size:13px;color:var(--tx3);display:flex;align-items:center;white-space:nowrap}
+
+/* ALERT */
+.al{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:9px;font-size:13px;margin-bottom:14px;line-height:1.5}
+.al-t{background:var(--teal-l);border:1px solid var(--teal-m);color:#0a7c73}
+.al-g{background:var(--green-l);border:1px solid var(--green-m);color:#03543f}
+.al-a{background:var(--amber-l);border:1px solid var(--amber-m);color:var(--amber)}
+.al-r{background:var(--red-l);border:1px solid var(--red-m);color:var(--red)}
+.al-b{background:var(--blue-l);border:1px solid var(--blue-m);color:var(--blue)}
+
+/* FILTER BAR */
+.fb{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.sw{display:flex;align-items:center;gap:8px;flex:1;max-width:380px;background:var(--card);border:1.5px solid var(--border2);border-radius:9px;padding:8px 12px;transition:border-color .17s,box-shadow .17s}
+.sw:focus-within{border-color:var(--teal);box-shadow:0 0 0 3px rgba(10,124,115,.08)}
+.sw input{border:none;outline:none;font-family:'Sarabun';font-size:13px;color:var(--tx1);background:transparent;flex:1}
+.sw input::placeholder{color:var(--tx4)}
+
+/* PROGRESS */
+.pr{margin-bottom:10px}
+.pr-h{display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:4px}
+.pr-b{height:7px;background:var(--bg);border-radius:10px;overflow:hidden}
+.pr-f{height:100%;border-radius:10px}
+
+/* BAR CHART */
+.bch{display:flex;align-items:flex-end;gap:6px;padding:4px 0}
+.bcc{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
+.bcb{width:100%;border-radius:4px 4px 0 0}
+.bcv{font-size:8px;font-weight:700;color:var(--tx3);font-family:'IBM Plex Mono'}
+.bcl{font-size:9px;color:var(--tx4)}
+
+/* TIMELINE */
+.tl{display:flex;flex-direction:column}
+.tl-r{display:flex;gap:12px;padding-bottom:14px;position:relative}
+.tl-r:not(:last-child)::before{content:'';position:absolute;left:15px;top:30px;bottom:0;width:2px;background:var(--border)}
+.tl-d{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;border:2px solid var(--border);background:var(--card);position:relative;z-index:1}
+.tl-b{flex:1;padding-top:3px}
+.tl-t{font-size:13px;font-weight:600;color:var(--tx1)}
+.tl-m{font-size:11px;color:var(--tx3);margin-top:1px}
+
+/* APPROVE CARD */
+.avc{background:var(--card);border-radius:14px;border:1px solid var(--border);box-shadow:var(--s2);overflow:hidden;margin-bottom:14px;transition:box-shadow .18s}
+.avc:hover{box-shadow:var(--s3)}
+.avc.lh{border-left:4px solid var(--red)}
+.avc.lm{border-left:4px solid var(--amber)}
+.av-h{padding:14px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.av-b{padding:14px 18px}
+.av-f{padding:12px 18px;background:#f8fafc;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.vc{width:40px;height:40px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;font-family:'IBM Plex Mono'}
+.vc1{background:rgba(26,86,219,.1);color:var(--blue)}
+.vc2{background:rgba(5,122,85,.1);color:var(--green)}
+.vc4{background:rgba(180,83,9,.1);color:var(--amber)}
+.vc5{background:rgba(10,124,115,.1);color:var(--teal)}
+.av-dg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.av-dl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx4)}
+.av-dv{font-size:13px;font-weight:600;color:var(--tx1);margin-top:2px}
+.rb{background:var(--slate-l);border-radius:9px;padding:12px 14px;margin-top:10px}
+.rb-l{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--tx4);margin-bottom:5px}
+.rb p{font-size:13px;color:var(--tx2);line-height:1.6}
+
+/* AUDIT LOG ROW */
+.lr{display:flex;align-items:center;gap:10px;padding:11px 18px;border-bottom:1px solid #f1f5f9;background:var(--card);cursor:pointer;transition:background .1s}
+.lr:hover{background:#f8fbfa}
+.lr:last-child{border-bottom:none}
+.lt{font-family:'IBM Plex Mono';font-size:11px;color:var(--tx3);width:148px;flex-shrink:0}
+.lw{width:120px;flex-shrink:0}
+.lwn{font-size:12px;font-weight:700;color:var(--tx1)}
+.lwi{font-size:10px;font-family:'IBM Plex Mono';color:var(--tx4)}
+.lap{padding:3px 10px;border-radius:5px;font-size:10px;font-weight:700;font-family:'IBM Plex Mono';white-space:nowrap}
+.la-g{background:#dcfce7;color:#166534}
+.la-t{background:var(--teal-l);color:var(--teal)}
+.la-b{background:var(--blue-l);color:var(--blue)}
+.la-a{background:var(--amber-l);color:var(--amber)}
+.la-r{background:var(--red-l);color:var(--red)}
+.la-s{background:var(--slate-m);color:var(--slate)}
+.lref{font-size:11px;font-family:'IBM Plex Mono';font-weight:600;color:var(--tx2);width:110px;flex-shrink:0}
+.lip{font-size:10px;font-family:'IBM Plex Mono';color:var(--tx4);width:115px;flex-shrink:0}
+.lnote{font-size:11px;color:var(--tx3);flex:1}
+
+/* RECEIPT PREVIEW */
+.rp{background:#fff;border:1.5px solid #1e293b;border-radius:3px;padding:22px 24px;font-size:12px;font-family:'Sarabun';line-height:1.9;max-width:360px;margin:0 auto}
+.rp-hd{text-align:center;margin-bottom:12px}
+.rp-title{font-size:15px;font-weight:800}
+.rp-org{font-size:11px;color:var(--tx3)}
+.rp-no{font-family:'IBM Plex Mono';font-size:13px;font-weight:700;background:var(--navy);color:#fff;display:inline-block;padding:2px 12px;border-radius:4px;margin-top:4px}
+.rp-row{display:flex;justify-content:space-between;border-bottom:1px dashed #e2e8f0;padding:3px 0;font-size:12px}
+.rp-k{color:var(--tx3)}
+.rp-v{font-weight:600;text-align:right}
+.rp-tot{display:flex;justify-content:space-between;border-top:2px solid var(--navy);margin-top:6px;padding-top:8px;font-weight:800;font-size:14px}
+.rp-bt{text-align:center;font-style:italic;font-size:11px;color:var(--tx3);margin-top:2px}
+
+/* PAY TABS */
+.ptabs{display:flex;gap:8px;margin-bottom:14px}
+.ptab{flex:1;padding:10px 8px;border-radius:9px;text-align:center;cursor:pointer;border:1.5px solid var(--border2);background:var(--card);font-size:12px;font-weight:600;color:var(--tx3);transition:all .16s}
+.ptab:hover{border-color:var(--teal);color:var(--teal)}
+.ptab.on{border-color:var(--teal);background:var(--teal-l);color:var(--teal)}
+.ptab-ico{font-size:18px;display:block;margin-bottom:3px}
+
+/* VOID STEP */
+.vr{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;border:1.5px solid var(--border);margin-bottom:6px;transition:border-color .14s,background .14s}
+.vr:hover{background:var(--slate-l)}
+.vr.on{border-color:var(--teal);background:var(--teal-l)}
+
+/* STEPS */
+.steps{display:flex;align-items:center;margin-bottom:22px}
+.sw2{flex:1;display:flex;flex-direction:column;align-items:center;position:relative}
+.sc2{width:32px;height:32px;border-radius:50%;z-index:1;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:'IBM Plex Mono';border:2px solid var(--border2);background:var(--card);color:var(--tx4);transition:all .2s}
+.sc2.dn{background:var(--green);border-color:var(--green);color:#fff}
+.sc2.act{background:var(--teal);border-color:var(--teal);color:#fff;box-shadow:0 0 0 4px rgba(10,124,115,.15)}
+.sl2{font-size:10px;font-weight:600;color:var(--tx4);margin-top:5px;text-align:center;white-space:nowrap}
+.sline{flex:1;height:2px;background:var(--border);margin:0 -1px;position:relative;top:-10px}
+.sline.dn{background:var(--green)}
+
+/* MODAL */
+.mm{position:fixed;inset:0;z-index:500;background:rgba(11,31,56,.45);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center}
+.mm.hide{display:none}
+.mb2{background:var(--card);border-radius:16px;box-shadow:var(--s4);width:560px;max-width:95vw;max-height:90vh;overflow-y:auto;animation:mIn .2s ease}
+@keyframes mIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.mb2::-webkit-scrollbar{width:4px}
+.mb2::-webkit-scrollbar-thumb{background:var(--border2)}
+.mh{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.mtitle{font-size:17px;font-weight:800;color:var(--tx1)}
+.mx{background:none;border:none;cursor:pointer;font-size:18px;color:var(--tx3);padding:4px;border-radius:6px;transition:background .14s}
+.mx:hover{background:var(--bg)}
+.mbd{padding:20px 24px}
+.mft{padding:14px 24px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+
+/* SCREEN NAV */
+#snav{position:fixed;bottom:20px;right:20px;z-index:300}
+.snt{width:42px;height:42px;border-radius:50%;background:var(--navy2);border:1px solid rgba(255,255,255,.14);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--s4);transition:all .18s}
+.snt:hover{background:var(--teal);transform:scale(1.08)}
+.snp{position:absolute;bottom:50px;right:0;background:var(--navy2);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:10px;width:232px;box-shadow:var(--s4);display:none}
+.snp.on{display:block}
+.snh{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.25);padding:0 6px;margin-bottom:6px}
+.sni{padding:7px 10px;border-radius:7px;cursor:pointer;font-size:12px;color:rgba(255,255,255,.55);transition:all .13s;display:flex;align-items:center;gap:7px}
+.sni:hover{background:rgba(255,255,255,.07);color:#fff}
+.sni.on{background:rgba(10,124,115,.25);color:#fff}
+
+/* MISC */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.sticky{position:sticky;top:16px}
+.mono{font-family:'IBM Plex Mono'}
+.f10{font-size:10px}.f11{font-size:11px}.f12{font-size:12px}.f13{font-size:13px}
+.fw6{font-weight:600}.fw7{font-weight:700}.fw8{font-weight:800}
+.tc{text-align:center}.tr{text-align:right}
+.fl{display:flex}.aic{align-items:center}.jcsb{justify-content:space-between}.fg1{flex:1}
+.g4{gap:4px}.g6{gap:6px}.g8{gap:8px}.g12{gap:12px}
+.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb16{margin-bottom:16px}.mb20{margin-bottom:20px}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt20{margin-top:20px}
+.ron{font-size:11px;background:var(--blue-l);color:var(--blue);border:1px solid var(--blue-m);border-radius:8px;padding:8px 12px;margin-bottom:16px}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;margin-right:3px}
+.dg{background:var(--green)}.da{background:var(--amber)}.dr{background:var(--red)}.dt{background:var(--teal2)}.ds{background:var(--slate)}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="tb-brand">
+    <div class="tb-mark">กสพ</div>
+    <div><div class="tb-title">ระบบคลัง กสพ.</div><div class="tb-sub">กรมสนับสนุนบริการสุขภาพ</div></div>
+  </div>
+  <div class="tb-sep"></div>
+  <div class="tb-crumb">
+    <span>หัวหน้าฝ่ายคลัง</span><span>›</span>
+    <span class="cur" id="bc">Dashboard</span>
+  </div>
+  <div class="tb-right">
+    <div class="tbtn">🔔<div class="nbadge">2</div></div>
+    <div class="tbtn">🔍</div>
+    <div class="tb-user">
+      <div class="tb-av">สด</div>
+      <div><div class="tb-un">นางสาวสุดา พงษ์ไพร</div><div class="tb-rb">CHIEF</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sg"><div class="sgl">หน้าหลัก</div>
+    <div class="sl on" data-p="pg-dash"><span class="sl-ico">📊</span><span class="sl-txt">Dashboard</span></div>
+  </div>
+  <div class="sg"><div class="sgl">อนุมัติ</div>
+    <div class="sl" data-p="pg-void-approve"><span class="sl-ico">✅</span><span class="sl-txt">อนุมัติยกเลิกใบเสร็จ</span><span class="sp sp-r">2</span></div>
+  </div>
+  <div class="sdiv"></div>
+  <div class="sg"><div class="sgl">ธุรกรรม (ดูอย่างเดียว)</div>
+    <div class="sl" data-p="pg-letters"><span class="sl-ico">📨</span><span class="sl-txt">หนังสือรับ</span></div>
+    <div class="sl" data-p="pg-receipt-new"><span class="sl-ico">🧾</span><span class="sl-txt">ออกใบเสร็จ</span></div>
+    <div class="sl" data-p="pg-receipt-list"><span class="sl-ico">📋</span><span class="sl-txt">รายการใบเสร็จ</span></div>
+    <div class="sl" data-p="pg-register"><span class="sl-ico">📒</span><span class="sl-txt">ทะเบียนคุมค่าปรับ</span></div>
+    <div class="sl" data-p="pg-report-daily"><span class="sl-ico">📈</span><span class="sl-txt">รายงานประจำวัน</span></div>
+  </div>
+  <div class="sdiv"></div>
+  <div class="sg"><div class="sgl">ตรวจสอบ</div>
+    <div class="sl" data-p="pg-report-monthly"><span class="sl-ico">📅</span><span class="sl-txt">รายงานรายเดือน</span></div>
+    <div class="sl" data-p="pg-audit"><span class="sl-ico">🔍</span><span class="sl-txt">Audit Log</span></div>
+  </div>
+  <div class="sb-bot">
+    <div class="pc">
+      <div class="pc-name">นางสาวสุดา พงษ์ไพร</div>
+      <div class="pc-role">🏅 หัวหน้าฝ่ายการคลัง</div>
+      <div class="pc-dept">ฝ่ายการเงินและการคลัง · กสพ.</div>
+    </div>
+    <button class="btn-lo">🚪 ออกจากระบบ</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+<!-- ██ DASHBOARD ██ -->
+<div class="pg on" id="pg-dash">
+  <div class="ph">
+    <div><div class="ph-t">📊 Dashboard — หัวหน้าฝ่ายคลัง</div><div class="ph-s">ภาพรวมฝ่ายการเงินและการคลัง · 9 มกราคม 2568</div></div>
+    <div class="ph-a">
+      <button class="btn btn-o">🖨️ Export รายงาน</button>
+      <button class="btn btn-p" onclick="go('pg-void-approve')">✅ อนุมัติรออยู่ (2)</button>
+    </div>
+  </div>
+  <div class="al al-a">⚠️ มี <strong>2 รายการขอยกเลิกใบเสร็จ</strong> รอการพิจารณาของท่าน — <span style="text-decoration:underline;cursor:pointer;font-weight:700" onclick="go('pg-void-approve')">ไปอนุมัติ →</span></div>
+
+  <div class="sg-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="sc ct"><div class="sc-ico">💰</div><div class="sc-lbl">รายรับเดือนนี้</div><div class="sc-val" style="font-size:22px">1,230,600</div><div class="sc-hint">บาท · 247 ใบเสร็จ · ↑ +8.3%</div></div>
+    <div class="sc cg"><div class="sc-ico">🧾</div><div class="sc-lbl">ใบเสร็จวันนี้</div><div class="sc-val">12</div><div class="sc-hint">฿ 84,500 · 3 เจ้าหน้าที่</div></div>
+    <div class="sc ca"><div class="sc-ico">⏳</div><div class="sc-lbl">รออนุมัติยกเลิก</div><div class="sc-val">2</div><div class="sc-hint">V-1 และ V-4</div></div>
+    <div class="sc cb2"><div class="sc-ico">📨</div><div class="sc-lbl">หนังสือรับเดือนนี้</div><div class="sc-val">41</div><div class="sc-hint">รอออกใบเสร็จ 3 ฉบับ</div></div>
+    <div class="sc ct"><div class="sc-ico">🏥</div><div class="sc-lbl">สถานพยาบาล</div><div class="sc-val">38</div><div class="sc-hint">ราย · เดือนนี้</div></div>
+    <div class="sc cr"><div class="sc-ico">🚫</div><div class="sc-lbl">ยกเลิกใบเสร็จ</div><div class="sc-val">4</div><div class="sc-hint">เดือนนี้ (1.6%)</div></div>
+  </div>
+
+  <div class="two-col mb20">
+    <div class="card">
+      <div class="ch"><div class="ct">ยอดรายรับ 7 วัน</div><span class="bdg bt">สัปดาห์นี้</span></div>
+      <div class="cb">
+        <div class="bch" style="height:100px">
+          <div class="bcc"><div class="bcv">72K</div><div class="bcb" style="height:72%;background:#99f6e4"></div><div class="bcl">3</div></div>
+          <div class="bcc"><div class="bcv">48K</div><div class="bcb" style="height:48%;background:#99f6e4"></div><div class="bcl">4</div></div>
+          <div class="bcc"><div class="bcv">85K</div><div class="bcb" style="height:85%;background:#99f6e4"></div><div class="bcl">5</div></div>
+          <div class="bcc"><div class="bcv">63K</div><div class="bcb" style="height:63%;background:#99f6e4"></div><div class="bcl">6</div></div>
+          <div class="bcc"><div class="bcv">95K</div><div class="bcb" style="height:95%;background:#99f6e4"></div><div class="bcl">7</div></div>
+          <div class="bcc"><div class="bcv">79K</div><div class="bcb" style="height:79%;background:#99f6e4"></div><div class="bcl">8</div></div>
+          <div class="bcc"><div class="bcv">84K</div><div class="bcb" style="height:84%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">9</div></div>
+        </div>
+        <div class="fl jcsb mt12 f12" style="color:var(--tx3);border-top:1px solid var(--border);padding-top:10px">
+          <span>รวม 7 วัน</span><span class="mono fw8" style="font-size:15px;color:var(--navy)">฿ 526,000</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><div class="ct">สัดส่วนช่องทางชำระ</div></div>
+      <div class="cb">
+        <div class="pr"><div class="pr-h"><span>💵 เงินสด</span><span class="mono fw7">52.1% · ฿641K</span></div><div class="pr-b"><div class="pr-f" style="width:52%;background:var(--teal)"></div></div></div>
+        <div class="pr"><div class="pr-h"><span>💳 EDC</span><span class="mono fw7">35.8% · ฿440K</span></div><div class="pr-b"><div class="pr-f" style="width:36%;background:var(--blue)"></div></div></div>
+        <div class="pr"><div class="pr-h"><span>🏦 เช็ค</span><span class="mono fw7">12.1% · ฿149K</span></div><div class="pr-b"><div class="pr-f" style="width:12%;background:var(--amber)"></div></div></div>
+        <div style="border-top:1px solid var(--border);margin-top:12px;padding-top:12px">
+          <div class="fl jcsb f12 mb8"><span style="color:var(--tx3)">เช็ครอ CLEARED</span><span class="bdg ba">3 ฉบับ · ฿38,500</span></div>
+          <div class="fl jcsb f12"><span style="color:var(--tx3)">EDC รอยืนยัน</span><span class="bdg bb">2 ฉบับ · ฿21,000</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="ch"><div><div class="ct">กิจกรรมทีมวันนี้</div><div class="cs">เจ้าหน้าที่ทุกคนในฝ่าย</div></div><button class="btn btn-o btn-sm" onclick="go('pg-audit')">ดู Audit Log</button></div>
+      <div class="cb">
+        <div class="tl">
+          <div class="tl-r"><div class="tl-d" style="background:#ebf5ff;border-color:var(--blue)">🧾</div><div class="tl-b"><div class="tl-t">นายสมชาย — ออกใบเสร็จ R68-00148 ฿5,000</div><div class="tl-m">10:42 · รพ.ศิริราชเอกชน · ม.34 · เงินสด</div></div></div>
+          <div class="tl-r"><div class="tl-d" style="background:#f3faf7;border-color:var(--green)">📨</div><div class="tl-b"><div class="tl-t">นางวลีรัตน์ — รับหนังสือ กสพ 0404/3428</div><div class="tl-m">09:18 · รพ.ขอนแก่นเอกชน · ม.41</div></div></div>
+          <div class="tl-r"><div class="tl-d" style="background:var(--teal-l);border-color:var(--teal)">🧾</div><div class="tl-b"><div class="tl-t">นายปิยะ — ออกใบเสร็จ R68-00147 ฿8,500</div><div class="tl-m">09:05 · คลินิกสุขใจ · ม.41 · เช็ค</div></div></div>
+          <div class="tl-r"><div class="tl-d">🔐</div><div class="tl-b"><div class="tl-t">นายสมชาย — เข้าสู่ระบบ</div><div class="tl-m">08:02 · 192.168.1.12</div></div></div>
+          <div class="tl-r"><div class="tl-d">🔐</div><div class="tl-b"><div class="tl-t">นางวลีรัตน์ — เข้าสู่ระบบ</div><div class="tl-m">08:00 · 192.168.1.15</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><div><div class="ct">รายการรออนุมัติ</div><div class="cs">ต้องพิจารณาวันนี้</div></div><span class="bdg br">2 รายการ</span></div>
+      <div class="cb">
+        <div style="border:1.5px solid var(--red-m);border-radius:10px;overflow:hidden;margin-bottom:10px">
+          <div style="background:var(--red-l);padding:12px 14px;display:flex;align-items:center;gap:10px">
+            <div class="vc vc1">V-1</div>
+            <div class="fg1"><div class="fw7 f13">R68-00145 · คลินิกพรีเมียร์</div><div class="f11" style="color:var(--tx3)">กรอกข้อมูลผิด · นายสมชาย · 8 ม.ค.</div></div>
+            <span class="mono fw8" style="color:var(--red)">฿3,000</span>
+          </div>
+          <div style="padding:10px 14px;display:flex;gap:6px;justify-content:flex-end">
+            <button class="btn btn-o btn-xs">👁 ดู</button>
+            <button class="btn btn-r btn-xs" onclick="openRejectModal('R68-00145')">✕</button>
+            <button class="btn btn-g btn-xs" onclick="openApproveModal('R68-00145','V-1','คลินิกพรีเมียร์','3,000')">✓ อนุมัติ</button>
+          </div>
+        </div>
+        <div style="border:1.5px solid var(--amber-m);border-radius:10px;overflow:hidden">
+          <div style="background:var(--amber-l);padding:12px 14px;display:flex;align-items:center;gap:10px">
+            <div class="vc vc4">V-4</div>
+            <div class="fg1"><div class="fw7 f13">R68-00139 · รพ.เวชธานี</div><div class="f11" style="color:var(--tx3)">ผิดประเภทความผิด · นางวลีรัตน์ · 6 ม.ค.</div></div>
+            <span class="mono fw8" style="color:var(--amber)">฿5,000</span>
+          </div>
+          <div style="padding:10px 14px;display:flex;gap:6px;justify-content:flex-end">
+            <button class="btn btn-o btn-xs">👁 ดู</button>
+            <button class="btn btn-r btn-xs" onclick="openRejectModal('R68-00139')">✕</button>
+            <button class="btn btn-g btn-xs" onclick="openApproveModal('R68-00139','V-4','รพ.เวชธานี','5,000')">✓ อนุมัติ</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ██ อนุมัติยกเลิก ██ -->
+<div class="pg" id="pg-void-approve">
+  <div class="ph">
+    <div><div class="ph-t">✅ อนุมัติยกเลิกใบเสร็จ</div><div class="ph-s">กรณีที่หัวหน้าอนุมัติได้: V-1 · V-2 · V-4 · V-5 | V-3 · V-6 ส่งต่อ ผอ. อัตโนมัติ</div></div>
+    <div class="ph-a"><span class="bdg br" style="padding:6px 14px;font-size:11px">2 รออนุมัติ</span><button class="btn btn-o">📥 Export</button></div>
+  </div>
+  <div class="fl g8 mb16">
+    <button class="btn btn-p btn-sm" id="tb-p" onclick="switchVoidTab('p')">⏳ รออนุมัติ (2)</button>
+    <button class="btn btn-o btn-sm" id="tb-h" onclick="switchVoidTab('h')">📋 ประวัติ</button>
+  </div>
+
+  <!-- PENDING -->
+  <div id="vt-p">
+    <div class="avc lh">
+      <div class="av-h">
+        <div class="vc vc1">V-1</div>
+        <div class="fg1">
+          <div class="fl aic g8 mb8"><span class="fw8 f13">ใบเสร็จ <span class="mono">R68-00145</span></span><span class="bdg bb">กรอกข้อมูลผิดพลาด</span></div>
+          <div class="f11" style="color:var(--tx3)">ยื่นโดย <strong>นายสมชาย ใจดี</strong> · 8 ม.ค. 2568 · <span style="color:var(--red);font-weight:700">รอ 1 วัน</span></div>
+        </div>
+        <div class="tr"><div class="mono fw8" style="font-size:18px;color:var(--red)">฿ 3,000</div><div class="f11" style="color:var(--tx3)">คลินิกพรีเมียร์</div></div>
+      </div>
+      <div class="av-b">
+        <div class="av-dg">
+          <div><div class="av-dl">มาตรา</div><div class="av-dv"><span class="bdg bn">มาตรา 34</span></div></div>
+          <div><div class="av-dl">ช่องทาง</div><div class="av-dv">💵 เงินสด</div></div>
+          <div><div class="av-dl">วันที่ออก</div><div class="av-dv">8 ม.ค. 2568</div></div>
+          <div><div class="av-dl">พิมพ์แล้ว</div><div class="av-dv">1 ครั้ง</div></div>
+          <div><div class="av-dl">เจ้าหน้าที่</div><div class="av-dv">นายสมชาย</div></div>
+          <div><div class="av-dl">สถานะ</div><div class="av-dv"><span class="bdg bg">ACTIVE</span></div></div>
+        </div>
+        <div class="rb"><div class="rb-l">เหตุผลที่ขอยกเลิก</div><p>กรอกชื่อผู้ชำระเงินผิด ควรเป็น "นายธนพล วิทยา" แต่กรอกเป็น "นายธนพัฒน์ วิทยา" — แนบหลักฐานบัตรประชาชนแล้ว</p></div>
+        <div class="fl g8 mt12">
+          <div class="bdg bb" style="padding:5px 10px;font-size:11px;cursor:pointer">📎 บัตรประชาชนผู้ชำระ.jpg (2.1 MB)</div>
+        </div>
+      </div>
+      <div class="av-f">
+        <span class="f11" style="color:var(--tx4)">รอ: 1 วัน</span><div class="fg1"></div>
+        <button class="btn btn-o btn-sm" onclick="openReceiptModal()">👁 ดูใบเสร็จต้นฉบับ</button>
+        <button class="btn btn-r btn-sm" onclick="openRejectModal('R68-00145')">✕ ปฏิเสธ</button>
+        <button class="btn btn-g btn-sm" onclick="openApproveModal('R68-00145','V-1','คลินิกพรีเมียร์','3,000')">✓ อนุมัติ</button>
+      </div>
+    </div>
+
+    <div class="avc lm">
+      <div class="av-h">
+        <div class="vc vc4">V-4</div>
+        <div class="fg1">
+          <div class="fl aic g8 mb8"><span class="fw8 f13">ใบเสร็จ <span class="mono">R68-00139</span></span><span class="bdg ba">ผิดประเภทความผิด</span></div>
+          <div class="f11" style="color:var(--tx3)">ยื่นโดย <strong>นางวลีรัตน์ สุขใจ</strong> · 6 ม.ค. 2568 · <span style="color:var(--amber);font-weight:700">รอ 3 วัน</span></div>
+        </div>
+        <div class="tr"><div class="mono fw8" style="font-size:18px;color:var(--amber)">฿ 5,000</div><div class="f11" style="color:var(--tx3)">รพ.เวชธานี</div></div>
+      </div>
+      <div class="av-b">
+        <div class="av-dg">
+          <div><div class="av-dl">มาตรา (ผิด)</div><div class="av-dv"><span class="bdg br">มาตรา 34</span></div></div>
+          <div><div class="av-dl">มาตรา (ถูก)</div><div class="av-dv"><span class="bdg bg">มาตรา 48(1)</span></div></div>
+          <div><div class="av-dl">ช่องทาง</div><div class="av-dv">💵 เงินสด</div></div>
+          <div><div class="av-dl">วันที่ออก</div><div class="av-dv">6 ม.ค. 2568</div></div>
+          <div><div class="av-dl">พิมพ์แล้ว</div><div class="av-dv">1 ครั้ง</div></div>
+          <div><div class="av-dl">สถานะ</div><div class="av-dv"><span class="bdg bg">ACTIVE</span></div></div>
+        </div>
+        <div class="rb"><div class="rb-l">เหตุผลที่ขอยกเลิก</div><p>เลือกมาตราผิด ควรเป็นมาตรา 48(1) (ไม่มีแพทย์ดูแล) แต่เลือกมาตรา 34 (ใบอนุญาตหมดอายุ) ต้องยกเลิกและออกใหม่ให้ถูกต้อง</p></div>
+      </div>
+      <div class="av-f">
+        <span class="f11" style="color:var(--tx4)">รอ: 3 วัน ⚠️</span><div class="fg1"></div>
+        <button class="btn btn-o btn-sm">👁 ดูใบเสร็จ</button>
+        <button class="btn btn-r btn-sm" onclick="openRejectModal('R68-00139')">✕ ปฏิเสธ</button>
+        <button class="btn btn-g btn-sm" onclick="openApproveModal('R68-00139','V-4','รพ.เวชธานี','5,000')">✓ อนุมัติ</button>
+      </div>
+    </div>
+
+    <div class="al al-b">ℹ️ กรณี <strong>V-3</strong> (คืนเงิน) และ <strong>V-6</strong> (พิเศษ) จะถูกส่งต่อ <strong>ผู้อำนวยการ</strong> โดยอัตโนมัติ — ท่านไม่สามารถอนุมัติกรณีเหล่านี้ได้</div>
+  </div>
+
+  <!-- HISTORY -->
+  <div id="vt-h" style="display:none">
+    <div class="tw">
+      <table>
+        <thead><tr><th>เลขที่ใบเสร็จ</th><th>กรณี</th><th>สถานพยาบาล</th><th class="tr">จำนวน (฿)</th><th>วันที่</th><th>เจ้าหน้าที่</th><th>ผล</th></tr></thead>
+        <tbody>
+          <tr><td><span class="mono fw7 f12" style="color:var(--navy)">R68-00125</span></td><td><span class="bdg bb">V-1</span></td><td>รพ.สมิติเวช</td><td class="tr mono fw7">3,000</td><td class="f12">8 ม.ค. 68</td><td class="f12">นายสมชาย</td><td><span class="bdg bg">✓ อนุมัติ</span></td></tr>
+          <tr><td><span class="mono fw7 f12" style="color:var(--navy)">R68-00118</span></td><td><span class="bdg bg">V-2</span></td><td>คลินิกสุขใจ</td><td class="tr mono fw7">5,000</td><td class="f12">5 ม.ค. 68</td><td class="f12">นางวลีรัตน์</td><td><span class="bdg bg">✓ อนุมัติ</span></td></tr>
+          <tr><td><span class="mono fw7 f12" style="color:var(--navy)">R68-00109</span></td><td><span class="bdg ba">V-4</span></td><td>รพ.พญาไท</td><td class="tr mono fw7">7,000</td><td class="f12">2 ม.ค. 68</td><td class="f12">นายปิยะ</td><td><span class="bdg br">✕ ปฏิเสธ</span></td></tr>
+          <tr><td><span class="mono fw7 f12" style="color:var(--navy)">R68-00098</span></td><td><span class="bdg bb">V-1</span></td><td>คลินิกโอสถ</td><td class="tr mono fw7">2,500</td><td class="f12">28 ธ.ค. 67</td><td class="f12">นายสมชาย</td><td><span class="bdg bg">✓ อนุมัติ</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ██ หนังสือรับ ██ -->
+<div class="pg" id="pg-letters">
+  <div class="ph"><div><div class="ph-t">📨 หนังสือรับค่าปรับ</div><div class="ph-s">ดูรายการ (Read-only)</div></div><div class="ph-a"><button class="btn btn-o">📥 Export</button></div></div>
+  <div class="ron">🔍 ท่านสามารถดูรายการได้เท่านั้น การรับหนังสือและออกใบเสร็จเป็นสิทธิ์ของเจ้าหน้าที่คลัง</div>
+  <div class="sg-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="sc ca"><div class="sc-ico">⏳</div><div class="sc-lbl">รอดำเนินการ</div><div class="sc-val">3</div></div>
+    <div class="sc cg"><div class="sc-ico">✅</div><div class="sc-lbl">ออกแล้ว</div><div class="sc-val">38</div></div>
+    <div class="sc ct"><div class="sc-ico">📨</div><div class="sc-lbl">รับวันนี้</div><div class="sc-val">2</div></div>
+    <div class="sc cb2"><div class="sc-ico">📁</div><div class="sc-lbl">เดือนนี้</div><div class="sc-val">41</div></div>
+  </div>
+  <div class="fb">
+    <div class="sw"><span>🔍</span><input type="text" placeholder="ค้นหา..."></div>
+    <select class="inp" style="width:160px"><option>ทุกสถานะ</option><option>รอออกใบเสร็จ</option><option>ออกแล้ว</option></select>
+    <select class="inp" style="width:150px"><option>ทุกมาตรา</option><option>มาตรา 34</option><option>มาตรา 41</option><option>มาตรา 48(1)</option></select>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>เลขที่หนังสือ</th><th>วันที่รับ</th><th>สถานพยาบาล</th><th>มาตรา</th><th>ค่าปรับ</th><th>เจ้าหน้าที่</th><th>สถานะ</th></tr></thead>
+    <tbody>
+      <tr><td><span class="mono fw7 f12" style="color:var(--navy)">กสพ 0404/3428</span></td><td class="f12">9 ม.ค. 68</td><td class="fw7">รพ.ขอนแก่นเอกชน</td><td><span class="bdg bn">ม.41</span></td><td class="mono">฿5,000</td><td class="f12">นายสมชาย</td><td><span class="bdg ba"><span class="dot da"></span>รอดำเนินการ</span></td></tr>
+      <tr><td><span class="mono fw7 f12" style="color:var(--navy)">กสพ 0404/3421</span></td><td class="f12">8 ม.ค. 68</td><td class="fw7">คลินิกสุขใจ</td><td><span class="bdg bn">ม.48(1)</span></td><td class="mono">฿10,000</td><td class="f12">นายสมชาย</td><td><span class="bdg ba"><span class="dot da"></span>รอดำเนินการ</span></td></tr>
+      <tr><td><span class="mono fw7 f12" style="color:var(--navy)">กสพ 0404/3415</span></td><td class="f12">7 ม.ค. 68</td><td class="fw7">รพ.สมิติเวช</td><td><span class="bdg bn">ม.34</span></td><td class="mono">฿7,000</td><td class="f12">นางวลีรัตน์</td><td><span class="bdg bg"><span class="dot dg"></span>ออกแล้ว</span></td></tr>
+      <tr><td><span class="mono fw7 f12" style="color:var(--navy)">กสพ 0404/3408</span></td><td class="f12">6 ม.ค. 68</td><td class="fw7">คลินิกพรีเมียร์</td><td><span class="bdg bn">ม.41</span></td><td class="mono">฿5,000</td><td class="f12">นายปิยะ</td><td><span class="bdg bg"><span class="dot dg"></span>ออกแล้ว</span></td></tr>
+      <tr><td><span class="mono fw7 f12" style="color:var(--navy)">กสพ 0404/3401</span></td><td class="f12">5 ม.ค. 68</td><td class="fw7">รพ.บำรุงราษฎร์</td><td><span class="bdg bn">ม.48(2)</span></td><td class="mono">฿8,000</td><td class="f12">นางวลีรัตน์</td><td><span class="bdg ba"><span class="dot da"></span>รอดำเนินการ</span></td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ██ ออกใบเสร็จ (RO) ██ -->
+<div class="pg" id="pg-receipt-new">
+  <div class="ph"><div><div class="ph-t">🧾 ออกใบเสร็จรับเงิน</div><div class="ph-s">ดูรูปแบบฟอร์ม (Read-only สำหรับหัวหน้า)</div></div></div>
+  <div class="ron">🔍 หน้านี้แสดงรูปแบบการกรอกข้อมูล — การออกใบเสร็จจริงเป็นสิทธิ์ของเจ้าหน้าที่คลัง</div>
+  <div class="two-col">
+    <div>
+      <div class="card mb16">
+        <div class="ch"><div class="ct">📨 ข้อมูลอ้างอิง</div></div>
+        <div class="cb">
+          <div class="r2 mb12">
+            <div class="fg"><label>เลขที่หนังสือ</label><input class="inp" readonly value="กสพ 0404/3428"></div>
+            <div class="fg"><label>วันที่รับหนังสือ</label><input class="inp" readonly value="9 มกราคม 2568"></div>
+          </div>
+          <div class="r2">
+            <div class="fg"><label>สถานพยาบาล</label><input class="inp" readonly value="รพ.ขอนแก่นเอกชน"></div>
+            <div class="fg"><label>มาตรา</label><input class="inp" readonly value="มาตรา 41"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb16">
+        <div class="ch"><div class="ct">👤 ข้อมูลผู้ชำระ</div></div>
+        <div class="cb">
+          <div class="fg mb12"><label>ชื่อ-สกุล<span class="req">*</span></label><input class="inp" readonly value="นายธนพล วิทยา"></div>
+          <div class="r2 mb12">
+            <div class="fg"><label>เลขบัตรประชาชน</label><input class="inp" readonly value="3-1234-56789-00-0"></div>
+            <div class="fg"><label>วันที่ชำระ</label><input class="inp" readonly value="9 มกราคม 2568"></div>
+          </div>
+          <div class="fg"><label>รายการความผิด</label><textarea class="inp" readonly>ไม่แสดงหลักฐานการตรวจสอบ ตามมาตรา 41 แห่ง พ.ร.บ.สถานพยาบาล พ.ศ.2541</textarea></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct">💳 ช่องทางชำระ</div></div>
+        <div class="cb">
+          <div class="ptabs">
+            <div class="ptab on"><span class="ptab-ico">💵</span>เงินสด</div>
+            <div class="ptab"><span class="ptab-ico">🏦</span>เช็ค</div>
+            <div class="ptab"><span class="ptab-ico">💳</span>EDC</div>
+          </div>
+          <div class="r2">
+            <div class="fg"><label>จำนวนเงิน</label><div class="ig"><input class="inp" readonly value="5000"><span class="ig-addon">บาท</span></div></div>
+            <div class="fg"><label>รับมา</label><div class="ig"><input class="inp" readonly value="5000"><span class="ig-addon">บาท</span></div></div>
+          </div>
+          <div class="fg mt8"><label>เงินทอน</label><input class="inp" readonly value="0 บาท" style="color:var(--green);font-weight:700"></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card sticky">
+        <div class="ch"><div class="ct">👁 Preview ใบเสร็จ</div><span class="bdg bs">ตัวอย่าง</span></div>
+        <div class="cb">
+          <div class="rp">
+            <div class="rp-hd"><div class="rp-title">ใบเสร็จรับเงิน</div><div class="rp-org">กรมสนับสนุนบริการสุขภาพ</div><div class="rp-org">กระทรวงสาธารณสุข</div><div class="rp-no">R68-00149</div></div>
+            <div class="rp-row"><span class="rp-k">วันที่</span><span class="rp-v">9 มกราคม 2568</span></div>
+            <div class="rp-row"><span class="rp-k">ผู้ชำระ</span><span class="rp-v">รพ.ขอนแก่นเอกชน</span></div>
+            <div class="rp-row"><span class="rp-k">หนังสือที่</span><span class="rp-v mono f11">กสพ 0404/3428</span></div>
+            <div class="rp-row"><span class="rp-k">มาตรา</span><span class="rp-v">41</span></div>
+            <div class="rp-row"><span class="rp-k">ช่องทาง</span><span class="rp-v">เงินสด</span></div>
+            <div class="rp-tot"><span>จำนวนเงิน</span><span class="mono">5,000.00 บาท</span></div>
+            <div class="rp-bt">(ห้าพันบาทถ้วน)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ██ รายการใบเสร็จ ██ -->
+<div class="pg" id="pg-receipt-list">
+  <div class="ph"><div><div class="ph-t">📋 รายการใบเสร็จรับเงิน</div><div class="ph-s">ดูรายการทั้งหมด (Read-only)</div></div><div class="ph-a"><button class="btn btn-o">📥 Export Excel</button></div></div>
+  <div class="ron">🔍 ดูรายการเท่านั้น — การออกใบเสร็จ/ยกเลิก เป็นสิทธิ์ของเจ้าหน้าที่คลัง</div>
+  <div class="sg-grid" style="grid-template-columns:repeat(5,1fr)">
+    <div class="sc ct"><div class="sc-lbl">วันนี้</div><div class="sc-val">12</div><div class="sc-hint">฿84,500</div></div>
+    <div class="sc cg"><div class="sc-lbl">ACTIVE</div><div class="sc-val">243</div><div class="sc-hint">เดือนนี้</div></div>
+    <div class="sc cr"><div class="sc-lbl">VOIDED</div><div class="sc-val">4</div><div class="sc-hint">เดือนนี้</div></div>
+    <div class="sc ca"><div class="sc-lbl">เช็ครอ CLEARED</div><div class="sc-val">3</div></div>
+    <div class="sc cb2"><div class="sc-lbl">EDC รอยืนยัน</div><div class="sc-val">2</div></div>
+  </div>
+  <div class="fb">
+    <div class="sw"><span>🔍</span><input type="text" placeholder="ค้นหา..."></div>
+    <input type="date" class="inp" style="width:150px" value="2025-01-09">
+    <select class="inp" style="width:130px"><option>ทุกช่องทาง</option><option>เงินสด</option><option>เช็ค</option><option>EDC</option></select>
+    <select class="inp" style="width:120px"><option>ทุกสถานะ</option><option>ACTIVE</option><option>VOIDED</option></select>
+    <select class="inp" style="width:150px"><option>ทุกเจ้าหน้าที่</option><option>นายสมชาย</option><option>นางวลีรัตน์</option><option>นายปิยะ</option></select>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>เลขที่ใบเสร็จ</th><th>วันที่</th><th>สถานพยาบาล</th><th>มาตรา</th><th class="tr">จำนวน</th><th>ช่องทาง</th><th>เจ้าหน้าที่</th><th>สถานะ</th><th>จัดการ</th></tr></thead>
+    <tbody>
+      <tr><td><span class="mono fw7 f12" style="color:var(--navy)">R68-00148</span></td><td class="f12">9 ม.ค. 10:42</td><td class="fw7">รพ.ศิริราช</td><td><span class="bdg bn">ม.34</span></td><td class="tr mono fw7">5,000</td><td><span class="bdg bg">💵 เงินสด</span></td><td class="f12">นายสมชาย</td><td><span class="bdg bg">ACTIVE</span></td><td><button class="btn btn-o btn-xs">👁 ดู</button></td></tr>
+      <tr><td><span class="mono fw7 f12" style="color:var(--navy)">R68-00147</span></td><td class="f12">9 ม.ค. 10:15</td><td class="fw7">คลินิกสุขใจ</td><td><span class="bdg bn">ม.41</span></td><td class="tr mono fw7">8,500</td><td><span class="bdg ba">🏦 เช็ค</span></td><td class="f12">นางวลีรัตน์</td><td><span class="bdg bg">ACTIVE</span></td><td><button class="btn btn-o btn-xs">👁 ดู</button></td></tr>
+      <tr><td><span class="mono fw7 f12" style="color:var(--navy)">R68-00146</span></td><td class="f12">8 ม.ค. 15:30</td><td class="fw7">รพ.บำรุงราษฎร์</td><td><span class="bdg bn">ม.48(1)</span></td><td class="tr mono fw7">15,000</td><td><span class="bdg bt">💳 EDC</span></td><td class="f12">นายปิยะ</td><td><span class="bdg bg">ACTIVE</span></td><td><button class="btn btn-o btn-xs">👁 ดู</button></td></tr>
+      <tr style="opacity:.55"><td><span class="mono fw7 f12">R68-00145</span></td><td class="f12">8 ม.ค. 14:20</td><td class="fw7">คลินิกพรีเมียร์</td><td><span class="bdg bn">ม.34</span></td><td class="tr mono">3,000</td><td><span class="bdg bg">💵 เงินสด</span></td><td class="f12">นายสมชาย</td><td><span class="bdg br">VOIDED</span></td><td><button class="btn btn-o btn-xs">👁 ดู</button></td></tr>
+      <tr><td><span class="mono fw7 f12" style="color:var(--navy)">R68-00144</span></td><td class="f12">7 ม.ค. 11:00</td><td class="fw7">รพ.สมิติเวช</td><td><span class="bdg bn">ม.41</span></td><td class="tr mono fw7">7,000</td><td><span class="bdg bg">💵 เงินสด</span></td><td class="f12">นางวลีรัตน์</td><td><span class="bdg bg">ACTIVE</span></td><td><button class="btn btn-o btn-xs">👁 ดู</button></td></tr>
+    </tbody>
+  </table></div>
+  <div class="fl aic jcsb mt12 f12" style="color:var(--tx3)">
+    <span>แสดง 5 จาก 247 รายการ</span>
+    <div class="fl g8"><button class="btn btn-o btn-sm">‹</button><button class="btn btn-p btn-sm">1</button><button class="btn btn-o btn-sm">2</button><button class="btn btn-o btn-sm">›</button></div>
+  </div>
+</div>
+
+<!-- ██ ทะเบียนคุม ██ -->
+<div class="pg" id="pg-register">
+  <div class="ph"><div><div class="ph-t">📒 ทะเบียนคุมค่าปรับ</div><div class="ph-s">ตรวจสอบรายรับสะสม</div></div><div class="ph-a"><button class="btn btn-o">📥 Export</button><button class="btn btn-p">🖨️ พิมพ์</button></div></div>
+  <div class="sg-grid" style="grid-template-columns:repeat(5,1fr)">
+    <div class="sc ct"><div class="sc-ico">💰</div><div class="sc-lbl">ยอดรวม</div><div class="sc-val" style="font-size:20px">84,500</div></div>
+    <div class="sc cg"><div class="sc-ico">💵</div><div class="sc-lbl">เงินสด</div><div class="sc-val" style="font-size:20px">45,200</div></div>
+    <div class="sc ca"><div class="sc-ico">🏦</div><div class="sc-lbl">เช็ค</div><div class="sc-val" style="font-size:20px">8,500</div><div class="sc-hint">รอ CLEARED</div></div>
+    <div class="sc cb2"><div class="sc-ico">💳</div><div class="sc-lbl">EDC</div><div class="sc-val" style="font-size:20px">30,800</div></div>
+    <div class="sc cr"><div class="sc-ico">📤</div><div class="sc-lbl">รอนำส่ง</div><div class="sc-val">2</div></div>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>เลขที่ใบเสร็จ</th><th>วันที่</th><th>สถานพยาบาล</th><th>มาตรา</th><th>เจ้าหน้าที่</th><th class="tr">เงินสด</th><th class="tr">เช็ค</th><th class="tr">EDC</th><th>สถานะ</th></tr></thead>
+    <tbody>
+      <tr><td class="f12" style="color:var(--tx4)">1</td><td><span class="mono fw7 f12" style="color:var(--navy)">R68-00148</span></td><td class="f12">9 ม.ค.</td><td>รพ.ศิริราช</td><td><span class="bdg bn">ม.34</span></td><td class="f12">สมชาย</td><td class="tr mono fw7">5,000</td><td class="tr" style="color:var(--tx4)">—</td><td class="tr" style="color:var(--tx4)">—</td><td><span class="bdg bg">✓ นำส่งแล้ว</span></td></tr>
+      <tr><td class="f12" style="color:var(--tx4)">2</td><td><span class="mono fw7 f12" style="color:var(--navy)">R68-00147</span></td><td class="f12">9 ม.ค.</td><td>คลินิกสุขใจ</td><td><span class="bdg bn">ม.41</span></td><td class="f12">วลีรัตน์</td><td class="tr" style="color:var(--tx4)">—</td><td class="tr mono fw7">8,500</td><td class="tr" style="color:var(--tx4)">—</td><td><span class="bdg ba">⏳ รอ CLEARED</span></td></tr>
+      <tr><td class="f12" style="color:var(--tx4)">3</td><td><span class="mono fw7 f12" style="color:var(--navy)">R68-00146</span></td><td class="f12">8 ม.ค.</td><td>รพ.บำรุงราษฎร์</td><td><span class="bdg bn">ม.48(1)</span></td><td class="f12">ปิยะ</td><td class="tr" style="color:var(--tx4)">—</td><td class="tr" style="color:var(--tx4)">—</td><td class="tr mono fw7">15,000</td><td><span class="bdg bg">✓ นำส่งแล้ว</span></td></tr>
+      <tr><td class="f12" style="color:var(--tx4)">4</td><td><span class="mono fw7 f12" style="color:var(--navy)">R68-00144</span></td><td class="f12">7 ม.ค.</td><td>รพ.สมิติเวช</td><td><span class="bdg bn">ม.41</span></td><td class="f12">วลีรัตน์</td><td class="tr mono fw7">7,000</td><td class="tr" style="color:var(--tx4)">—</td><td class="tr" style="color:var(--tx4)">—</td><td><span class="bdg bs">⏳ รอนำส่ง</span></td></tr>
+      <tr style="background:#edfcfb"><td colspan="6" class="fw8 f12" style="color:var(--navy)">ยอดรวม</td><td class="tr mono fw8" style="color:var(--green)">12,000</td><td class="tr mono fw8" style="color:var(--amber)">8,500</td><td class="tr mono fw8" style="color:var(--blue)">23,800</td><td></td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ██ รายงานประจำวัน ██ -->
+<div class="pg" id="pg-report-daily">
+  <div class="ph"><div><div class="ph-t">📈 รายงานรับเงินประจำวัน (R-01)</div><div class="ph-s">9 มกราคม 2568</div></div><div class="ph-a"><input type="date" class="inp" style="width:160px" value="2025-01-09"><button class="btn btn-o">🖨️</button><button class="btn btn-p">📥 Excel</button></div></div>
+  <div class="sg-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="sc ct"><div class="sc-ico">🧾</div><div class="sc-lbl">ใบเสร็จวันนี้</div><div class="sc-val">12</div></div>
+    <div class="sc cg"><div class="sc-ico">💵</div><div class="sc-lbl">เงินสด</div><div class="sc-val" style="font-size:20px">45,200</div></div>
+    <div class="sc ca"><div class="sc-ico">🏦</div><div class="sc-lbl">เช็ค</div><div class="sc-val" style="font-size:20px">8,500</div></div>
+    <div class="sc cb2"><div class="sc-ico">💳</div><div class="sc-lbl">EDC</div><div class="sc-val" style="font-size:20px">30,800</div></div>
+  </div>
+  <div class="two-col">
+    <div class="card">
+      <div class="ch"><div class="ct">รายละเอียด</div></div>
+      <div class="tw" style="border:none;border-radius:0"><table>
+        <thead><tr><th>เลขที่ใบเสร็จ</th><th>สถานพยาบาล</th><th>เจ้าหน้าที่</th><th>มาตรา</th><th class="tr">฿</th><th>ช่องทาง</th></tr></thead>
+        <tbody>
+          <tr><td class="mono f12 fw7" style="color:var(--navy)">R68-00148</td><td>รพ.ศิริราช</td><td class="f12">สมชาย</td><td><span class="bdg bn">ม.34</span></td><td class="tr mono fw7">5,000</td><td class="tc">💵</td></tr>
+          <tr><td class="mono f12 fw7" style="color:var(--navy)">R68-00147</td><td>คลินิกสุขใจ</td><td class="f12">วลีรัตน์</td><td><span class="bdg bn">ม.41</span></td><td class="tr mono fw7">8,500</td><td class="tc">🏦</td></tr>
+          <tr><td class="mono f12 fw7" style="color:var(--navy)">R68-00146</td><td>รพ.บำรุงราษฎร์</td><td class="f12">ปิยะ</td><td><span class="bdg bn">ม.48(1)</span></td><td class="tr mono fw7">15,000</td><td class="tc">💳</td></tr>
+          <tr><td class="mono f12 fw7" style="color:var(--navy)">R68-00144</td><td>รพ.สมิติเวช</td><td class="f12">วลีรัตน์</td><td><span class="bdg bn">ม.41</span></td><td class="tr mono fw7">7,000</td><td class="tc">💵</td></tr>
+          <tr style="background:#edfcfb"><td colspan="4" class="fw8 f12">รวมสุทธิ</td><td class="tr mono fw8" style="font-size:15px;color:var(--navy)">84,500</td><td></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card"><div class="ch"><div class="ct">สัดส่วนช่องทาง</div></div>
+        <div class="cb">
+          <div class="pr"><div class="pr-h"><span>💵 เงินสด</span><span class="mono fw7">53.3%</span></div><div class="pr-b"><div class="pr-f" style="width:53%;background:var(--teal)"></div></div></div>
+          <div class="pr"><div class="pr-h"><span>💳 EDC</span><span class="mono fw7">36.5%</span></div><div class="pr-b"><div class="pr-f" style="width:36%;background:var(--blue)"></div></div></div>
+          <div class="pr"><div class="pr-h"><span>🏦 เช็ค</span><span class="mono fw7">10.1%</span></div><div class="pr-b"><div class="pr-f" style="width:10%;background:var(--amber)"></div></div></div>
+        </div>
+      </div>
+      <div class="card"><div class="ch"><div class="ct">ตามเจ้าหน้าที่</div></div>
+        <div class="cb">
+          <div class="pr"><div class="pr-h"><span>นายสมชาย</span><span class="mono fw7">฿35,200</span></div><div class="pr-b"><div class="pr-f" style="width:42%;background:var(--teal)"></div></div></div>
+          <div class="pr"><div class="pr-h"><span>นางวลีรัตน์</span><span class="mono fw7">฿30,000</span></div><div class="pr-b"><div class="pr-f" style="width:36%;background:var(--teal)"></div></div></div>
+          <div class="pr"><div class="pr-h"><span>นายปิยะ</span><span class="mono fw7">฿19,300</span></div><div class="pr-b"><div class="pr-f" style="width:23%;background:var(--teal)"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ██ รายงานรายเดือน ██ -->
+<div class="pg" id="pg-report-monthly">
+  <div class="ph"><div><div class="ph-t">📅 รายงานรายเดือน (R-02)</div><div class="ph-s">มกราคม 2568</div></div>
+    <div class="ph-a"><select class="inp" style="width:180px"><option>มกราคม 2568</option><option>ธันวาคม 2567</option><option>พฤศจิกายน 2567</option></select><button class="btn btn-o">🖨️</button><button class="btn btn-p">📥 PDF ส่ง ผอ.</button></div>
+  </div>
+  <div class="sg-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="sc ct"><div class="sc-lbl">รายรับเดือนนี้</div><div class="sc-val" style="font-size:20px">1.23M</div><div class="sc-hint">฿1,230,600 · ↑ +8.3%</div></div>
+    <div class="sc cg"><div class="sc-lbl">ใบเสร็จทั้งหมด</div><div class="sc-val">247</div><div class="sc-hint">ACTIVE 243 · VOIDED 4</div></div>
+    <div class="sc ca"><div class="sc-lbl">ยกเลิก</div><div class="sc-val">4</div><div class="sc-hint">1.6% ของทั้งหมด</div></div>
+    <div class="sc cb2"><div class="sc-lbl">สถานพยาบาล</div><div class="sc-val">38</div><div class="sc-hint">ราย</div></div>
+  </div>
+  <div class="two-col mb16">
+    <div class="card">
+      <div class="ch"><div class="ct">กราฟรายรับรายวัน (มกราคม)</div></div>
+      <div class="cb" style="padding-bottom:12px">
+        <div class="bch" style="height:120px">
+          <div class="bcc"><div class="bcv">42K</div><div class="bcb" style="height:42%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">1</div></div>
+          <div class="bcc"><div class="bcv">65K</div><div class="bcb" style="height:65%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">3</div></div>
+          <div class="bcc"><div class="bcv">30K</div><div class="bcb" style="height:30%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">5</div></div>
+          <div class="bcc"><div class="bcv">88K</div><div class="bcb" style="height:88%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">7</div></div>
+          <div class="bcc"><div class="bcv">55K</div><div class="bcb" style="height:55%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">9</div></div>
+          <div class="bcc"><div class="bcv">72K</div><div class="bcb" style="height:72%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">11</div></div>
+          <div class="bcc"><div class="bcv">48K</div><div class="bcb" style="height:48%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">13</div></div>
+          <div class="bcc"><div class="bcv">95K</div><div class="bcb" style="height:95%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">15</div></div>
+          <div class="bcc"><div class="bcv">63K</div><div class="bcb" style="height:63%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">17</div></div>
+          <div class="bcc"><div class="bcv">78K</div><div class="bcb" style="height:78%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">19</div></div>
+          <div class="bcc"><div class="bcv">52K</div><div class="bcb" style="height:52%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">21</div></div>
+          <div class="bcc"><div class="bcv">84K</div><div class="bcb" style="height:84%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">23</div></div>
+          <div class="bcc"><div class="bcv">67K</div><div class="bcb" style="height:67%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">25</div></div>
+          <div class="bcc"><div class="bcv">41K</div><div class="bcb" style="height:41%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">27</div></div>
+          <div class="bcc"><div class="bcv">71K</div><div class="bcb" style="height:71%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">29</div></div>
+          <div class="bcc"><div class="bcv">58K</div><div class="bcb" style="height:58%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">31</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card"><div class="ch"><div class="ct">เปรียบเทียบ 6 เดือน</div></div>
+        <div class="cb" style="padding-bottom:12px">
+          <div class="bch" style="height:90px">
+            <div class="bcc"><div class="bcv">980K</div><div class="bcb" style="height:80%;background:#99f6e4"></div><div class="bcl">ส.ค.</div></div>
+            <div class="bcc"><div class="bcv">1.1M</div><div class="bcb" style="height:89%;background:#99f6e4"></div><div class="bcl">ก.ย.</div></div>
+            <div class="bcc"><div class="bcv">890K</div><div class="bcb" style="height:72%;background:#99f6e4"></div><div class="bcl">ต.ค.</div></div>
+            <div class="bcc"><div class="bcv">1.05M</div><div class="bcb" style="height:85%;background:#99f6e4"></div><div class="bcl">พ.ย.</div></div>
+            <div class="bcc"><div class="bcv">1.14M</div><div class="bcb" style="height:93%;background:#99f6e4"></div><div class="bcl">ธ.ค.</div></div>
+            <div class="bcc"><div class="bcv">1.23M</div><div class="bcb" style="height:100%;background:linear-gradient(to top,var(--teal),var(--teal2))"></div><div class="bcl">ม.ค.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card"><div class="ch"><div class="ct">ช่องทางชำระ</div></div>
+        <div class="cb">
+          <div class="pr"><div class="pr-h"><span>💵 เงินสด</span><span class="mono fw7">52.1%</span></div><div class="pr-b"><div class="pr-f" style="width:52%;background:var(--teal)"></div></div></div>
+          <div class="pr"><div class="pr-h"><span>💳 EDC</span><span class="mono fw7">35.8%</span></div><div class="pr-b"><div class="pr-f" style="width:36%;background:var(--blue)"></div></div></div>
+          <div class="pr"><div class="pr-h"><span>🏦 เช็ค</span><span class="mono fw7">12.1%</span></div><div class="pr-b"><div class="pr-f" style="width:12%;background:var(--amber)"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="two-col">
+    <div class="card"><div class="ch"><div class="ct">สรุปตามมาตรา</div></div>
+      <div class="tw" style="border:none;border-radius:0"><table>
+        <thead><tr><th>มาตรา</th><th>รายการ</th><th class="tr">จำนวนเงิน</th><th class="tr">%</th></tr></thead>
+        <tbody>
+          <tr><td><span class="bdg bn">มาตรา 41</span></td><td class="mono">98</td><td class="tr mono fw7">฿456,000</td><td class="tr mono">37.1%</td></tr>
+          <tr><td><span class="bdg bn">มาตรา 48(1)</span></td><td class="mono">62</td><td class="tr mono fw7">฿358,000</td><td class="tr mono">29.1%</td></tr>
+          <tr><td><span class="bdg bn">มาตรา 34</span></td><td class="mono">54</td><td class="tr mono fw7">฿248,000</td><td class="tr mono">20.2%</td></tr>
+          <tr><td><span class="bdg bn">มาตรา 48(2)</span></td><td class="mono">33</td><td class="tr mono fw7">฿168,600</td><td class="tr mono">13.7%</td></tr>
+          <tr style="background:#edfcfb"><td class="fw8 f12">รวม</td><td class="mono fw8">247</td><td class="tr mono fw8">฿1,230,600</td><td class="tr mono fw8">100%</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="card"><div class="ch"><div class="ct">ผลการดำเนินงานตามเจ้าหน้าที่</div></div>
+      <div class="cb">
+        <div style="margin-bottom:14px"><div class="fl jcsb aic mb8"><div class="fl aic g8"><div style="width:28px;height:28px;border-radius:7px;background:#1a56db;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff">สช</div><span class="fw7 f13">นายสมชาย ใจดี</span></div><div class="tr"><div class="mono fw7">฿482,000</div><div class="f11" style="color:var(--tx3)">95 ใบเสร็จ</div></div></div><div class="pr-b"><div class="pr-f" style="width:78%;background:var(--teal)"></div></div></div>
+        <div style="margin-bottom:14px"><div class="fl jcsb aic mb8"><div class="fl aic g8"><div style="width:28px;height:28px;border-radius:7px;background:#057a55;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff">วล</div><span class="fw7 f13">นางวลีรัตน์ สุขใจ</span></div><div class="tr"><div class="mono fw7">฿432,000</div><div class="f11" style="color:var(--tx3)">85 ใบเสร็จ</div></div></div><div class="pr-b"><div class="pr-f" style="width:70%;background:var(--green)"></div></div></div>
+        <div><div class="fl jcsb aic mb8"><div class="fl aic g8"><div style="width:28px;height:28px;border-radius:7px;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff">ปย</div><span class="fw7 f13">นายปิยะ ตั้งใจ</span></div><div class="tr"><div class="mono fw7">฿316,600</div><div class="f11" style="color:var(--tx3)">67 ใบเสร็จ</div></div></div><div class="pr-b"><div class="pr-f" style="width:51%;background:#7c3aed"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ██ AUDIT LOG ██ -->
+<div class="pg" id="pg-audit">
+  <div class="ph">
+    <div><div class="ph-t">🔍 Audit Log</div><div class="ph-s">บันทึกกิจกรรมทั้งหมด — Immutable · เก็บรักษา ≥ 5 ปี</div></div>
+    <div class="ph-a"><button class="btn btn-o">📥 Export CSV</button><button class="btn btn-p">📊 วิเคราะห์</button></div>
+  </div>
+  <div class="al al-t">🔒 Audit Log ไม่สามารถแก้ไข ลบ หรือปรับแต่งได้โดยผู้ใช้งานใดทั้งสิ้น — บันทึกโดยระบบอัตโนมัติ</div>
+  <div class="sg-grid" style="grid-template-columns:repeat(5,1fr)">
+    <div class="sc ct"><div class="sc-lbl">กิจกรรมวันนี้</div><div class="sc-val">42</div></div>
+    <div class="sc cb2"><div class="sc-lbl">เดือนนี้</div><div class="sc-val">1,248</div></div>
+    <div class="sc cg"><div class="sc-lbl">Login วันนี้</div><div class="sc-val">5</div></div>
+    <div class="sc cr"><div class="sc-lbl">Login ล้มเหลว</div><div class="sc-val">2</div></div>
+    <div class="sc ca"><div class="sc-lbl">VOID actions</div><div class="sc-val">6</div></div>
+  </div>
+  <div class="fb">
+    <div class="sw" style="max-width:400px"><span>🔍</span><input type="text" placeholder="ค้นหา user, action, ref..."></div>
+    <input type="date" class="inp" style="width:150px" value="2025-01-09">
+    <input type="time" class="inp" style="width:120px" value="00:00">
+    <select class="inp" style="width:190px">
+      <option>ทุก Action</option>
+      <option>LOGIN / LOGOUT</option>
+      <option>CREATE_RECEIPT</option>
+      <option>PRINT_RECEIPT</option>
+      <option>VOID_RECEIPT</option>
+      <option>APPROVE_VOID</option>
+      <option>CREATE_LETTER</option>
+      <option>EXPORT_REPORT</option>
+      <option>VIEW_SENSITIVE</option>
+    </select>
+    <select class="inp" style="width:170px">
+      <option>ทุก User</option>
+      <option>สมชาย (staff001)</option>
+      <option>วลีรัตน์ (staff002)</option>
+      <option>ปิยะ (staff003)</option>
+      <option>สุดา (chief001)</option>
+    </select>
+  </div>
+
+  <!-- LOG ROWS — plain HTML, no JS template literals -->
+  <div class="card">
+    <div class="lr"><div class="lt">09-01-2568 10:42:18</div><div class="lw"><div class="lwn">สมชาย</div><div class="lwi">staff001</div></div><div class="fg1 fl aic g8"><span class="lap la-g">CREATE_RECEIPT</span></div><div class="lref">R68-00148</div><div class="lip">192.168.1.12</div><div style="font-size:12px;color:var(--tx4)">›</div></div>
+    <div class="lr"><div class="lt">09-01-2568 10:42:19</div><div class="lw"><div class="lwn">สมชาย</div><div class="lwi">staff001</div></div><div class="fg1 fl aic g8"><span class="lap la-t">PRINT_RECEIPT</span></div><div class="lref">R68-00148</div><div class="lip">192.168.1.12</div><div style="font-size:12px;color:var(--tx4)">›</div></div>
+    <div class="lr"><div class="lt">09-01-2568 10:18:33</div><div class="lw"><div class="lwn">วลีรัตน์</div><div class="lwi">staff002</div></div><div class="fg1 fl aic g8"><span class="lap la-b">CREATE_LETTER</span></div><div class="lref">L-3428</div><div class="lip">192.168.1.15</div><div style="font-size:12px;color:var(--tx4)">›</div></div>
+    <div class="lr"><div class="lt">09-01-2568 10:05:11</div><div class="lw"><div class="lwn">ปิยะ</div><div class="lwi">staff003</div></div><div class="fg1 fl aic g8"><span class="lap la-g">CREATE_RECEIPT</span></div><div class="lref">R68-00147</div><div class="lip">192.168.1.18</div><div style="font-size:12px;color:var(--tx4)">›</div></div>
+    <div class="lr"><div class="lt">09-01-2568 09:55:40</div><div class="lw"><div class="lwn">สุดา</div><div class="lwi">chief001</div></div><div class="fg1 fl aic g8"><span class="lap la-a">VIEW_SENSITIVE</span><span class="lnote">ดูใบเสร็จ VOIDED</span></div><div class="lref">R68-00145</div><div class="lip">192.168.1.20</div><div style="font-size:12px;color:var(--tx4)">›</div></div>
+    <div class="lr"><div class="lt">09-01-2568 08:02:05</div><div class="lw"><div class="lwn">สมชาย</div><div class="lwi">staff001</div></div><div class="fg1 fl aic g8"><span class="lap la-s">LOGIN</span></div><div class="lref">—</div><div class="lip">192.168.1.12</div><div style="font-size:12px;color:var(--tx4)">›</div></div>
+    <div class="lr"><div class="lt">09-01-2568 08:00:44</div><div class="lw"><div class="lwn">วลีรัตน์</div><div class="lwi">staff002</div></div><div class="fg1 fl aic g8"><span class="lap la-s">LOGIN</span></div><div class="lref">—</div><div class="lip">192.168.1.15</div><div style="font-size:12px;color:var(--tx4)">›</div></div>
+    <div class="lr"><div class="lt">08-01-2568 16:45:22</div><div class="lw"><div class="lwn">สมชาย</div><div class="lwi">staff001</div></div><div class="fg1 fl aic g8"><span class="lap la-r">VOID_RECEIPT</span><span class="lnote">V-1 ส่งคำขอ</span></div><div class="lref">R68-00145</div><div class="lip">192.168.1.12</div><div style="font-size:12px;color:var(--tx4)">›</div></div>
+    <div class="lr"><div class="lt">08-01-2568 14:22:10</div><div class="lw"><div class="lwn">สุดา</div><div class="lwi">chief001</div></div><div class="fg1 fl aic g8"><span class="lap la-g">APPROVE_VOID</span><span class="lnote">V-1 อนุมัติ</span></div><div class="lref">R68-00125</div><div class="lip">192.168.1.20</div><div style="font-size:12px;color:var(--tx4)">›</div></div>
+    <div class="lr"><div class="lt">08-01-2568 11:30:55</div><div class="lw"><div class="lwn">ปิยะ</div><div class="lwi">staff003</div></div><div class="fg1 fl aic g8"><span class="lap la-t">EXPORT_REPORT</span><span class="lnote">R-01 Export</span></div><div class="lref">RPT-0108</div><div class="lip">192.168.1.18</div><div style="font-size:12px;color:var(--tx4)">›</div></div>
+  </div>
+
+  <div class="fl aic jcsb mt12 f12" style="color:var(--tx3)">
+    <span>แสดง 10 จาก 1,248 รายการ</span>
+    <div class="fl g8"><button class="btn btn-o btn-sm">‹</button><button class="btn btn-p btn-sm">1</button><button class="btn btn-o btn-sm">2</button><button class="btn btn-o btn-sm">3</button><button class="btn btn-o btn-sm">…</button><button class="btn btn-o btn-sm">125</button><button class="btn btn-o btn-sm">›</button></div>
+  </div>
+
+  <div class="two-col mt20">
+    <div class="card"><div class="ch"><div class="ct">Action ที่พบบ่อยวันนี้</div></div>
+      <div class="cb">
+        <div class="pr"><div class="pr-h"><span class="mono f11">CREATE_RECEIPT</span><span class="mono fw7">18</span></div><div class="pr-b"><div class="pr-f" style="width:43%;background:var(--green)"></div></div></div>
+        <div class="pr"><div class="pr-h"><span class="mono f11">LOGIN / LOGOUT</span><span class="mono fw7">10</span></div><div class="pr-b"><div class="pr-f" style="width:24%;background:var(--slate)"></div></div></div>
+        <div class="pr"><div class="pr-h"><span class="mono f11">PRINT_RECEIPT</span><span class="mono fw7">7</span></div><div class="pr-b"><div class="pr-f" style="width:17%;background:var(--teal)"></div></div></div>
+        <div class="pr"><div class="pr-h"><span class="mono f11">EXPORT_REPORT</span><span class="mono fw7">4</span></div><div class="pr-b"><div class="pr-f" style="width:10%;background:var(--blue)"></div></div></div>
+        <div class="pr"><div class="pr-h"><span class="mono f11">VOID_RECEIPT</span><span class="mono fw7">3</span></div><div class="pr-b"><div class="pr-f" style="width:7%;background:var(--red)"></div></div></div>
+      </div>
+    </div>
+    <div class="card"><div class="ch"><div class="ct">กิจกรรมแยก User วันนี้</div></div>
+      <div class="cb">
+        <div class="tl-r"><div style="width:32px;height:32px;border-radius:8px;background:#1a56db;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0">สช</div><div class="fg1 tl-b"><div class="tl-t">นายสมชาย ใจดี</div><div class="tl-m mono">staff001</div></div><span class="bdg bt mono">18 actions</span></div>
+        <div class="tl-r"><div style="width:32px;height:32px;border-radius:8px;background:#057a55;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0">วล</div><div class="fg1 tl-b"><div class="tl-t">นางวลีรัตน์ สุขใจ</div><div class="tl-m mono">staff002</div></div><span class="bdg bt mono">14 actions</span></div>
+        <div class="tl-r"><div style="width:32px;height:32px;border-radius:8px;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0">ปย</div><div class="fg1 tl-b"><div class="tl-t">นายปิยะ ตั้งใจ</div><div class="tl-m mono">staff003</div></div><span class="bdg bt mono">10 actions</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<!-- SCREEN NAV -->
+<div id="snav">
+  <div class="snp" id="snp">
+    <div class="snh">ข้ามหน้า (CHIEF)</div>
+    <div class="sni on"  id="sn-pg-dash"           onclick="go('pg-dash')">📊 Dashboard</div>
+    <div class="sni"     id="sn-pg-void-approve"   onclick="go('pg-void-approve')">✅ อนุมัติยกเลิก</div>
+    <div class="sni"     id="sn-pg-letters"        onclick="go('pg-letters')">📨 หนังสือรับ</div>
+    <div class="sni"     id="sn-pg-receipt-new"    onclick="go('pg-receipt-new')">🧾 ออกใบเสร็จ (ดู)</div>
+    <div class="sni"     id="sn-pg-receipt-list"   onclick="go('pg-receipt-list')">📋 รายการใบเสร็จ</div>
+    <div class="sni"     id="sn-pg-register"       onclick="go('pg-register')">📒 ทะเบียนคุม</div>
+    <div class="sni"     id="sn-pg-report-daily"   onclick="go('pg-report-daily')">📈 รายงานวัน</div>
+    <div class="sni"     id="sn-pg-report-monthly" onclick="go('pg-report-monthly')">📅 รายงานเดือน</div>
+    <div class="sni"     id="sn-pg-audit"          onclick="go('pg-audit')">🔍 Audit Log</div>
+  </div>
+  <div class="snt" onclick="document.getElementById('snp').classList.toggle('on')">🗺</div>
+</div>
+
+<!-- MODAL -->
+<div class="mm hide" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="mb2" onclick="event.stopPropagation()">
+    <div class="mh"><div class="mtitle" id="m-title"></div><button class="mx" onclick="closeModal()">✕</button></div>
+    <div class="mbd" id="m-body"></div>
+    <div class="mft" id="m-foot"></div>
+  </div>
+</div>
+
+<script>
+/* ── NAVIGATION ── */
+const NAMES = {
+  'pg-dash':'Dashboard','pg-void-approve':'อนุมัติยกเลิกใบเสร็จ',
+  'pg-letters':'หนังสือรับ','pg-receipt-new':'ออกใบเสร็จ',
+  'pg-receipt-list':'รายการใบเสร็จ','pg-register':'ทะเบียนคุมค่าปรับ',
+  'pg-report-daily':'รายงานประจำวัน','pg-report-monthly':'รายงานรายเดือน',
+  'pg-audit':'Audit Log'
+};
+
+function go(id) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('.sl').forEach(l => l.classList.remove('on'));
+  const sl = document.querySelector(`.sl[data-p="${id}"]`);
+  if (sl) sl.classList.add('on');
+  document.getElementById('bc').textContent = NAMES[id] || id;
+  document.querySelectorAll('.sni').forEach(i => i.classList.remove('on'));
+  const sni = document.getElementById('sn-' + id);
+  if (sni) sni.classList.add('on');
+  document.getElementById('snp').classList.remove('on');
+  document.getElementById('main').scrollTop = 0;
+}
+
+document.querySelectorAll('.sl').forEach(l => l.addEventListener('click', () => go(l.dataset.p)));
+
+/* ── VOID TABS ── */
+function switchVoidTab(t) {
+  document.getElementById('vt-p').style.display = t === 'p' ? 'block' : 'none';
+  document.getElementById('vt-h').style.display = t === 'h' ? 'block' : 'none';
+  document.getElementById('tb-p').className = 'btn btn-sm ' + (t === 'p' ? 'btn-p' : 'btn-o');
+  document.getElementById('tb-h').className = 'btn btn-sm ' + (t === 'h' ? 'btn-p' : 'btn-o');
+}
+
+/* ── MODAL ── */
+function openModal(title, body, foot) {
+  document.getElementById('m-title').textContent = title;
+  document.getElementById('m-body').innerHTML = body;
+  document.getElementById('m-foot').innerHTML = foot || '<button class="btn btn-o" onclick="closeModal()">ปิด</button>';
+  document.getElementById('modal').classList.remove('hide');
+}
+function closeModal() { document.getElementById('modal').classList.add('hide'); }
+
+function openApproveModal(no, vc, place, amt) {
+  openModal('✅ ยืนยันอนุมัติยกเลิก',
+    `<div class="al al-g">กำลังอนุมัติการยกเลิกใบเสร็จ <strong class="mono">${no}</strong></div>
+    <div style="background:var(--bg);border-radius:10px;padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px">
+      <div><div class="f10 fw7" style="color:var(--tx4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">ใบเสร็จ</div><div class="mono fw8">${no}</div></div>
+      <div><div class="f10 fw7" style="color:var(--tx4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">กรณี</div><div class="fw7">${vc}</div></div>
+      <div><div class="f10 fw7" style="color:var(--tx4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">สถานพยาบาล</div><div class="fw7">${place}</div></div>
+      <div><div class="f10 fw7" style="color:var(--tx4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">จำนวนเงิน</div><div class="mono fw8" style="color:var(--red)">฿ ${amt}</div></div>
+    </div>
+    <div class="al al-a mt12" style="margin-bottom:0">⚠️ เมื่ออนุมัติแล้ว ใบเสร็จจะเปลี่ยนสถานะเป็น VOIDED ทันที และบันทึกใน Audit Log</div>`,
+    `<button class="btn btn-o" onclick="closeModal()">ยกเลิก</button>
+     <button class="btn btn-g" onclick="closeModal()">✓ ยืนยันอนุมัติ</button>`
+  );
+}
+
+function openRejectModal(no) {
+  openModal('✕ ปฏิเสธคำขอยกเลิก',
+    `<div class="al al-r">ปฏิเสธคำขอยกเลิกใบเสร็จ <strong class="mono">${no}</strong></div>
+    <div class="fg"><label>เหตุผลที่ปฏิเสธ <span class="req">*</span></label>
+    <textarea class="inp" placeholder="กรุณาระบุเหตุผลให้เจ้าหน้าที่ทราบ..." style="min-height:90px"></textarea></div>
+    <div class="al al-b" style="margin-bottom:0">ℹ️ เจ้าหน้าที่จะได้รับแจ้งเตือนพร้อมเหตุผลของท่าน</div>`,
+    `<button class="btn btn-o" onclick="closeModal()">ยกเลิก</button>
+     <button class="btn btn-r" onclick="closeModal()">✕ ยืนยันปฏิเสธ</button>`
+  );
+}
+
+function openReceiptModal() {
+  openModal('👁 ใบเสร็จต้นฉบับ R68-00145',
+    `<div class="rp" style="max-width:100%">
+      <div class="rp-hd"><div class="rp-title">ใบเสร็จรับเงิน</div><div class="rp-org">กรมสนับสนุนบริการสุขภาพ</div><div class="rp-no">R68-00145</div></div>
+      <div class="rp-row"><span class="rp-k">วันที่</span><span class="rp-v">8 มกราคม 2568</span></div>
+      <div class="rp-row"><span class="rp-k">ผู้ชำระ</span><span class="rp-v">คลินิกพรีเมียร์</span></div>
+      <div class="rp-row"><span class="rp-k">มาตรา</span><span class="rp-v">34</span></div>
+      <div class="rp-row"><span class="rp-k">ช่องทาง</span><span class="rp-v">เงินสด</span></div>
+      <div class="rp-row"><span class="rp-k">เจ้าหน้าที่</span><span class="rp-v">นายสมชาย ใจดี</span></div>
+      <div class="rp-tot"><span>จำนวนเงิน</span><span class="mono">3,000.00 บาท</span></div>
+      <div class="rp-bt">(สามพันบาทถ้วน)</div>
+    </div>
+    <div style="margin-top:12px;text-align:center"><span class="bdg ba" style="font-size:12px;padding:5px 12px">⏳ สถานะ: ACTIVE (รออนุมัติยกเลิก)</span></div>`,
+    `<button class="btn btn-o" onclick="closeModal()">ปิด</button>
+     <button class="btn btn-p" onclick="closeModal()">🖨️ พิมพ์</button>`
+  );
+}
+</script>
+</body>
+</html>

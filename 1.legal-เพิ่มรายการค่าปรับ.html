@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รายการปรับ — กองกฎหมาย</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:    #0D2137;
+    --navy2:   #163352;
+    --blue:    #1A5276;
+    --accent:  #2471A3;
+    --gold:    #C89B3C;
+    --gold2:   #F0C040;
+    --red:     #C0392B;
+    --green:   #1E8449;
+    --gray1:   #F4F6F8;
+    --gray2:   #E8ECF0;
+    --gray3:   #BDC3C7;
+    --gray4:   #7F8C8D;
+    --text:    #1A2530;
+    --white:   #FFFFFF;
+    --shadow:  0 2px 12px rgba(13,33,55,0.10);
+    --shadow2: 0 4px 24px rgba(13,33,55,0.16);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans Thai', 'Sarabun', sans-serif;
+    background: #EEF2F7;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    position: fixed; left: 0; top: 0; bottom: 0;
+    width: 64px;
+    background: var(--navy);
+    display: flex; flex-direction: column; align-items: center;
+    padding: 18px 0;
+    z-index: 100;
+    gap: 4px;
+  }
+  .sidebar-logo {
+    width: 38px; height: 38px;
+    background: var(--gold);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; color: var(--navy);
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(200,155,60,0.4);
+  }
+  .nav-item {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: rgba(255,255,255,0.45);
+    font-size: 18px; transition: all 0.2s;
+    position: relative;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.08); color: var(--white); }
+  .nav-item.active { background: var(--accent); color: var(--white); box-shadow: 0 2px 10px rgba(36,113,163,0.5); }
+  .nav-item .tooltip {
+    position: absolute; left: 58px; top: 50%; transform: translateY(-50%);
+    background: var(--navy); color: var(--white);
+    padding: 4px 10px; border-radius: 6px; font-size: 12px;
+    white-space: nowrap; pointer-events: none; opacity: 0;
+    transition: opacity 0.15s; font-family: 'IBM Plex Sans Thai', sans-serif;
+  }
+  .nav-item:hover .tooltip { opacity: 1; }
+
+  /* ===== TOPBAR ===== */
+  .topbar {
+    position: fixed; left: 64px; right: 0; top: 0; height: 60px;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray2);
+    display: flex; align-items: center; padding: 0 28px;
+    z-index: 99; gap: 12px;
+    box-shadow: 0 1px 6px rgba(13,33,55,0.07);
+  }
+  .topbar-title {
+    font-size: 16px; font-weight: 600; color: var(--navy);
+    flex: 1;
+  }
+  .topbar-title span { color: var(--gray4); font-weight: 400; font-size: 13px; margin-left: 8px; }
+  .topbar-user {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 14px; border-radius: 10px;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .topbar-user:hover { background: var(--gray1); }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--accent); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600;
+  }
+  .user-info { text-align: right; }
+  .user-name { font-size: 13px; font-weight: 600; color: var(--navy); }
+  .user-role { font-size: 11px; color: var(--gray4); }
+
+  /* ===== MAIN ===== */
+  .main {
+    margin-left: 64px;
+    padding-top: 60px;
+    min-height: 100vh;
+  }
+  .content { padding: 28px 32px; }
+
+  /* ===== PAGE HEADER ===== */
+  .page-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .page-title { font-size: 22px; font-weight: 700; color: var(--navy); }
+  .page-sub { font-size: 13px; color: var(--gray4); margin-top: 3px; }
+  .btn-primary {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--accent); color: var(--white);
+    border: none; border-radius: 10px;
+    padding: 10px 20px; font-size: 14px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.2s; box-shadow: 0 2px 8px rgba(36,113,163,0.35);
+  }
+  .btn-primary:hover { background: var(--blue); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(36,113,163,0.45); }
+
+  /* ===== STATS CARDS ===== */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 16px; margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--white); border-radius: 14px;
+    padding: 20px 22px; box-shadow: var(--shadow);
+    border-top: 3px solid transparent;
+    transition: transform 0.2s;
+  }
+  .stat-card:hover { transform: translateY(-2px); }
+  .stat-card.s1 { border-top-color: var(--accent); }
+  .stat-card.s2 { border-top-color: #E67E22; }
+  .stat-card.s3 { border-top-color: var(--green); }
+  .stat-card.s4 { border-top-color: var(--red); }
+  .stat-label { font-size: 12px; color: var(--gray4); font-weight: 500; margin-bottom: 8px; }
+  .stat-value { font-size: 28px; font-weight: 700; color: var(--navy); line-height: 1; }
+  .stat-unit { font-size: 12px; color: var(--gray4); margin-top: 4px; }
+  .stat-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; padding: 2px 8px; border-radius: 20px;
+    margin-top: 6px; font-weight: 500;
+  }
+  .stat-badge.up { background: #EBF5E8; color: var(--green); }
+  .stat-badge.pending { background: #FEF9E7; color: #D68910; }
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar {
+    background: var(--white); border-radius: 14px;
+    padding: 18px 22px; box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .filter-group { display: flex; flex-direction: column; gap: 5px; }
+  .filter-label { font-size: 11px; font-weight: 600; color: var(--gray4); text-transform: uppercase; letter-spacing: 0.5px; }
+  .filter-input, .filter-select {
+    height: 36px; border: 1.5px solid var(--gray2);
+    border-radius: 8px; padding: 0 12px;
+    font-size: 13px; font-family: inherit; color: var(--text);
+    background: var(--gray1); outline: none; transition: border-color 0.15s;
+  }
+  .filter-input { min-width: 220px; }
+  .filter-select { min-width: 150px; }
+  .filter-input:focus, .filter-select:focus { border-color: var(--accent); background: var(--white); }
+  .filter-input::placeholder { color: var(--gray3); }
+  .filter-actions { display: flex; gap: 8px; margin-left: auto; align-items: flex-end; padding-bottom: 0; }
+  .btn-search {
+    height: 36px; padding: 0 18px;
+    background: var(--accent); color: var(--white);
+    border: none; border-radius: 8px; font-size: 13px;
+    font-family: inherit; font-weight: 600; cursor: pointer; transition: background 0.15s;
+  }
+  .btn-search:hover { background: var(--blue); }
+  .btn-clear {
+    height: 36px; padding: 0 14px;
+    background: var(--gray1); color: var(--gray4);
+    border: 1.5px solid var(--gray2); border-radius: 8px;
+    font-size: 13px; font-family: inherit; cursor: pointer; transition: all 0.15s;
+  }
+  .btn-clear:hover { border-color: var(--gray3); color: var(--text); }
+
+  /* ===== TABLE ===== */
+  .table-card {
+    background: var(--white); border-radius: 14px;
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .table-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--gray2);
+  }
+  .table-title { font-size: 14px; font-weight: 600; color: var(--navy); }
+  .table-count { font-size: 12px; color: var(--gray4); background: var(--gray1); padding: 3px 10px; border-radius: 20px; }
+  .table-actions { display: flex; gap: 8px; }
+  .btn-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    border: 1.5px solid var(--gray2); background: var(--gray1);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--gray4); font-size: 14px; transition: all 0.15s;
+  }
+  .btn-icon:hover { border-color: var(--accent); color: var(--accent); background: #EBF3FB; }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: var(--gray1); }
+  thead th {
+    padding: 11px 16px; text-align: left;
+    font-size: 11px; font-weight: 700;
+    color: var(--gray4); text-transform: uppercase;
+    letter-spacing: 0.6px; border-bottom: 1px solid var(--gray2);
+    white-space: nowrap;
+  }
+  thead th:first-child { padding-left: 22px; }
+  thead th:last-child { padding-right: 22px; }
+  tbody tr {
+    border-bottom: 1px solid var(--gray2);
+    transition: background 0.12s; cursor: pointer;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #F0F7FF; }
+  tbody td {
+    padding: 13px 16px; font-size: 13px; color: var(--text);
+    vertical-align: middle;
+  }
+  tbody td:first-child { padding-left: 22px; }
+  tbody td:last-child { padding-right: 22px; }
+
+  .ref-no { font-weight: 600; color: var(--navy); font-size: 13px; }
+  .ref-date { font-size: 11px; color: var(--gray4); margin-top: 2px; }
+  .offender-name { font-weight: 500; font-size: 13px; }
+  .offender-company { font-size: 11px; color: var(--gray4); margin-top: 2px; }
+
+  /* STATUS BADGE */
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; white-space: nowrap;
+  }
+  .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.7; }
+  .badge-pending  { background: #FEF9E7; color: #D68910; }
+  .badge-issued   { background: #EBF5E8; color: #1E8449; }
+  .badge-cancel   { background: #FDEDEC; color: #C0392B; }
+  .badge-waiting  { background: #EBF3FB; color: #2471A3; }
+
+  /* PENALTY TYPE */
+  .penalty-tag {
+    display: inline-block; padding: 3px 9px; border-radius: 6px;
+    font-size: 11px; font-weight: 600;
+  }
+  .penalty-phinae { background: #EBF3FB; color: #1A5276; border: 1px solid #AED6F1; }
+  .penalty-aya    { background: #FDEDEC; color: #922B21; border: 1px solid #F1948A; }
+
+  /* AMOUNT */
+  .amount { font-weight: 700; font-size: 14px; color: var(--navy); text-align: right; }
+  .amount-text { font-size: 11px; color: var(--gray4); margin-top: 2px; text-align: right; }
+
+  /* ROW ACTIONS */
+  .row-actions { display: flex; gap: 6px; justify-content: flex-end; }
+  .act-btn {
+    padding: 5px 12px; border-radius: 7px;
+    font-size: 12px; font-weight: 600; font-family: inherit;
+    border: none; cursor: pointer; transition: all 0.15s;
+  }
+  .act-view  { background: #EBF3FB; color: #2471A3; }
+  .act-view:hover  { background: #AED6F1; }
+  .act-receipt { background: #EBF5E8; color: #1E8449; }
+  .act-receipt:hover { background: #A9DFBF; }
+  .act-edit { background: #FEF9E7; color: #D68910; }
+  .act-edit:hover { background: #FAD7A0; }
+
+  /* PAGINATION */
+  .pagination {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 22px;
+    border-top: 1px solid var(--gray2);
+    font-size: 12px; color: var(--gray4);
+  }
+  .page-btns { display: flex; gap: 4px; }
+  .page-btn {
+    width: 30px; height: 30px; border-radius: 7px;
+    border: 1.5px solid var(--gray2); background: var(--gray1);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 12px; font-family: inherit;
+    color: var(--text); transition: all 0.15s;
+  }
+  .page-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .page-btn.active { background: var(--accent); border-color: var(--accent); color: var(--white); font-weight: 700; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(13,33,55,0.5);
+    z-index: 200; display: none; align-items: center; justify-content: center;
+    backdrop-filter: blur(2px);
+  }
+  .modal-overlay.open { display: flex; animation: fadeIn 0.2s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: var(--white); border-radius: 18px;
+    width: 680px; max-width: 95vw; max-height: 90vh;
+    overflow-y: auto; box-shadow: var(--shadow2);
+    animation: slideUp 0.25s;
+  }
+  @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-head {
+    padding: 22px 26px 16px;
+    border-bottom: 1px solid var(--gray2);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-title { font-size: 16px; font-weight: 700; color: var(--navy); }
+  .modal-close {
+    width: 30px; height: 30px; border-radius: 8px;
+    border: none; background: var(--gray1); cursor: pointer;
+    font-size: 16px; color: var(--gray4); display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .modal-close:hover { background: var(--gray2); color: var(--text); }
+  .modal-body { padding: 22px 26px; }
+  .modal-footer {
+    padding: 16px 26px; border-top: 1px solid var(--gray2);
+    display: flex; justify-content: flex-end; gap: 10px;
+  }
+
+  /* FORM */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-full { grid-column: 1 / -1; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-label { font-size: 12px; font-weight: 600; color: var(--navy); }
+  .form-required { color: var(--red); margin-left: 2px; }
+  .form-input, .form-select, .form-textarea {
+    height: 38px; border: 1.5px solid var(--gray2);
+    border-radius: 8px; padding: 0 12px;
+    font-size: 13px; font-family: inherit; color: var(--text);
+    background: var(--gray1); outline: none; transition: border-color 0.15s;
+  }
+  .form-textarea { height: auto; min-height: 72px; padding: 10px 12px; resize: vertical; }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--accent); background: var(--white);
+    box-shadow: 0 0 0 3px rgba(36,113,163,0.10);
+  }
+  .form-hint { font-size: 11px; color: var(--gray4); }
+  .section-divider {
+    font-size: 11px; font-weight: 700; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 1px;
+    padding: 14px 0 8px; border-bottom: 1px solid var(--gray2);
+    margin-bottom: 14px; grid-column: 1 / -1;
+  }
+  .btn-cancel-modal {
+    height: 38px; padding: 0 18px;
+    background: var(--gray1); color: var(--gray4);
+    border: 1.5px solid var(--gray2); border-radius: 8px;
+    font-size: 13px; font-family: inherit; cursor: pointer; transition: all 0.15s;
+  }
+  .btn-cancel-modal:hover { border-color: var(--gray3); color: var(--text); }
+  .btn-save {
+    height: 38px; padding: 0 22px;
+    background: var(--accent); color: var(--white);
+    border: none; border-radius: 8px;
+    font-size: 13px; font-family: inherit; font-weight: 600; cursor: pointer; transition: all 0.15s;
+  }
+  .btn-save:hover { background: var(--blue); }
+
+  /* CHECKBOX */
+  .checkbox-row { display: flex; align-items: center; gap: 8px; }
+  .checkbox-row input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--accent); }
+  .checkbox-row label { font-size: 13px; color: var(--text); }
+
+  /* EMPTY STATE */
+  .empty-state {
+    padding: 52px 20px; text-align: center;
+    color: var(--gray4); font-size: 13px; display: none;
+  }
+  .empty-state .icon { font-size: 40px; margin-bottom: 10px; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 28px; right: 28px;
+    background: var(--navy); color: var(--white);
+    padding: 12px 20px; border-radius: 10px;
+    font-size: 13px; font-weight: 500; font-family: inherit;
+    box-shadow: var(--shadow2); z-index: 999;
+    transform: translateY(60px); opacity: 0; transition: all 0.3s;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { border-left: 4px solid var(--green); }
+
+  /* SCROLL */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--gray1); }
+  ::-webkit-scrollbar-thumb { background: var(--gray3); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">ก</div>
+  <div class="nav-item" title="">
+    <span>🏠</span><span class="tooltip">หน้าหลัก</span>
+  </div>
+  <div class="nav-item active">
+    <span>📋</span><span class="tooltip">รายการปรับ</span>
+  </div>
+  <div class="nav-item">
+    <span>🏛️</span><span class="tooltip">บันทึกข้อความ</span>
+  </div>
+  <div class="nav-item">
+    <span>📊</span><span class="tooltip">รายงาน</span>
+  </div>
+  <div class="nav-item" style="margin-top:auto;">
+    <span>⚙️</span><span class="tooltip">ตั้งค่า</span>
+  </div>
+</nav>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-title">
+    รายการปรับ
+    <span>กองกฎหมาย / กรมสนับสนุนบริการสุขภาพ</span>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <div style="font-size:12px;color:var(--gray4);">ปีงบประมาณ</div>
+    <select class="filter-select" style="height:32px;font-size:12px;min-width:110px;">
+      <option>2569</option>
+      <option>2568</option>
+      <option>2567</option>
+    </select>
+  </div>
+  <div class="topbar-user">
+    <div class="user-info">
+      <div class="user-name">สาโรจน์ ยอดประดิษฐ์</div>
+      <div class="user-role">เจ้าหน้าที่กองกฎหมาย</div>
+    </div>
+    <div class="avatar">สา</div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="content">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div>
+        <div class="page-title">รายการปรับสถานพยาบาล</div>
+        <div class="page-sub">จัดการบันทึกข้อความและส่งตัวผู้กระทำความผิดชำระค่าปรับ</div>
+      </div>
+      <button class="btn-primary" onclick="openModal()">
+        <span>＋</span> เพิ่มรายการปรับใหม่
+      </button>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card s1">
+        <div class="stat-label">รายการทั้งหมด (ปีนี้)</div>
+        <div class="stat-value">47</div>
+        <div class="stat-unit">รายการ</div>
+        <div class="stat-badge up">▲ 12 จากปีที่แล้ว</div>
+      </div>
+      <div class="stat-card s2">
+        <div class="stat-label">รอออกใบเสร็จ</div>
+        <div class="stat-value">8</div>
+        <div class="stat-unit">รายการ</div>
+        <div class="stat-badge pending">⏳ ต้องดำเนินการ</div>
+      </div>
+      <div class="stat-card s3">
+        <div class="stat-label">ออกใบเสร็จแล้ว</div>
+        <div class="stat-value">35</div>
+        <div class="stat-unit">รายการ</div>
+        <div class="stat-badge up">✓ เสร็จสิ้น</div>
+      </div>
+      <div class="stat-card s4">
+        <div class="stat-label">ยอดรวมค่าปรับ</div>
+        <div class="stat-value">1.24</div>
+        <div class="stat-unit">ล้านบาท</div>
+        <div class="stat-badge up">▲ เพิ่มขึ้น 18%</div>
+      </div>
+    </div>
+
+    <!-- FILTER -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <div class="filter-label">ค้นหา</div>
+        <input class="filter-input" type="text" placeholder="ชื่อสถานพยาบาล / เลขที่หนังสือ…" id="searchInput" oninput="filterTable()">
+      </div>
+      <div class="filter-group">
+        <div class="filter-label">พ.ร.บ.</div>
+        <select class="filter-select" id="filterAct" onchange="filterTable()">
+          <option value="">ทั้งหมด</option>
+          <option value="สถานพยาบาล">สถานพยาบาล 2541</option>
+          <option value="สถานประกอบการ">สถานประกอบการฯ 2559</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <div class="filter-label">ประเภทโทษ</div>
+        <select class="filter-select" id="filterPenalty" onchange="filterTable()">
+          <option value="">ทั้งหมด</option>
+          <option value="พินัย">พินัย</option>
+          <option value="อาญา">อาญา</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <div class="filter-label">สถานะ</div>
+        <select class="filter-select" id="filterStatus" onchange="filterTable()">
+          <option value="">ทั้งหมด</option>
+          <option value="รอออกใบเสร็จ">รอออกใบเสร็จ</option>
+          <option value="ออกใบเสร็จแล้ว">ออกใบเสร็จแล้ว</option>
+          <option value="ส่งงานคลัง">ส่งงานคลังแล้ว</option>
+        </select>
+      </div>
+      <div class="filter-actions">
+        <button class="btn-clear" onclick="clearFilter()">ล้าง</button>
+        <button class="btn-search">🔍 ค้นหา</button>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-card">
+      <div class="table-header">
+        <div>
+          <span class="table-title">รายการปรับทั้งหมด</span>
+          <span class="table-count" id="rowCount">47 รายการ</span>
+        </div>
+        <div class="table-actions">
+          <div class="btn-icon" title="Export Excel">📥</div>
+          <div class="btn-icon" title="พิมพ์">🖨️</div>
+        </div>
+      </div>
+
+      <table id="fineTable">
+        <thead>
+          <tr>
+            <th>เลขที่หนังสือ / วันที่</th>
+            <th>สถานพยาบาล / บริษัท</th>
+            <th>พ.ร.บ. / มาตรา</th>
+            <th>ประเภท</th>
+            <th style="text-align:right">ค่าปรับ</th>
+            <th>สถานะ</th>
+            <th style="text-align:right">การดำเนินการ</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+
+      <div class="empty-state" id="emptyState">
+        <div class="icon">📭</div>
+        <div>ไม่พบรายการที่ตรงกับเงื่อนไขการค้นหา</div>
+      </div>
+
+      <div class="pagination">
+        <div>แสดง 1–10 จาก <strong>47</strong> รายการ</div>
+        <div class="page-btns">
+          <div class="page-btn">‹</div>
+          <div class="page-btn active">1</div>
+          <div class="page-btn">2</div>
+          <div class="page-btn">3</div>
+          <div class="page-btn">4</div>
+          <div class="page-btn">5</div>
+          <div class="page-btn">›</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- MODAL: เพิ่มรายการปรับ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">➕ เพิ่มรายการปรับใหม่</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+
+        <div class="section-divider">📄 ข้อมูลบันทึกข้อความ</div>
+
+        <div class="form-group">
+          <label class="form-label">เลขที่หนังสือ <span class="form-required">*</span></label>
+          <input class="form-input" type="text" placeholder="สธ ๐๓๐๒.๐๖/…" id="f_refno">
+        </div>
+        <div class="form-group">
+          <label class="form-label">วันที่หนังสือ <span class="form-required">*</span></label>
+          <input class="form-input" type="date" id="f_date">
+        </div>
+
+        <div class="section-divider">🏥 ข้อมูลผู้กระทำความผิด</div>
+
+        <div class="form-group form-full">
+          <label class="form-label">ชื่อสถานพยาบาล / หน่วยงาน <span class="form-required">*</span></label>
+          <input class="form-input" type="text" placeholder="ชื่อสถานพยาบาล หรือ คลินิก…" id="f_offender">
+        </div>
+        <div class="form-group form-full">
+          <label class="form-label">ชื่อบริษัท / นิติบุคคล</label>
+          <input class="form-input" type="text" placeholder="บริษัท … จำกัด" id="f_company">
+        </div>
+
+        <div class="section-divider">⚖️ ฐานความผิด</div>
+
+        <div class="form-group">
+          <label class="form-label">พ.ร.บ. <span class="form-required">*</span></label>
+          <select class="form-select" id="f_act" onchange="updateSection()">
+            <option value="">— เลือก พ.ร.บ. —</option>
+            <option value="สถานพยาบาล">พ.ร.บ. สถานพยาบาล พ.ศ. 2541</option>
+            <option value="สถานประกอบการ">พ.ร.บ. สถานประกอบการเพื่อสุขภาพ พ.ศ. 2559</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">ประเภทโทษ <span class="form-required">*</span></label>
+          <select class="form-select" id="f_penalty_type" onchange="updateSection()">
+            <option value="">— เลือกประเภท —</option>
+            <option value="พินัย">พินัย</option>
+            <option value="อาญา">อาญา</option>
+          </select>
+        </div>
+        <div class="form-group form-full">
+          <label class="form-label">มาตราความผิด <span class="form-required">*</span></label>
+          <select class="form-select" id="f_section">
+            <option value="">— เลือก พ.ร.บ. และประเภทโทษก่อน —</option>
+          </select>
+        </div>
+        <div class="form-group form-full">
+          <label class="form-label">รายละเอียดความผิด</label>
+          <textarea class="form-textarea" placeholder="อธิบายรายละเอียดการกระทำความผิด…" id="f_detail"></textarea>
+        </div>
+
+        <div class="section-divider">💰 ค่าปรับ</div>
+
+        <div class="form-group">
+          <label class="form-label">จำนวนเงินค่าปรับ (บาท) <span class="form-required">*</span></label>
+          <input class="form-input" type="number" placeholder="0.00" id="f_amount" oninput="updateAmountText()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">จำนวนเงิน (ตัวอักษร)</label>
+          <input class="form-input" type="text" id="f_amount_text" readonly style="background:#F4F6F8;color:var(--gray4);">
+          <div class="form-hint">Generate อัตโนมัติ</div>
+        </div>
+
+        <div class="section-divider">📋 อื่นๆ</div>
+
+        <div class="form-group form-full">
+          <div class="checkbox-row">
+            <input type="checkbox" id="f_send_finance">
+            <label for="f_send_finance">ส่งบันทึกข้อความไปยังงานการเงินแล้ว (พร้อมออกใบเสร็จ)</label>
+          </div>
+        </div>
+        <div class="form-group form-full">
+          <label class="form-label">หมายเหตุ</label>
+          <textarea class="form-textarea" placeholder="หมายเหตุเพิ่มเติม (ถ้ามี)…" style="min-height:52px;" id="f_note"></textarea>
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel-modal" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn-save" onclick="saveRecord()">💾 บันทึกรายการ</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA =====
+const sectionMap = {
+  'สถานพยาบาล': {
+    'พินัย': ['21','26','30','31','32','34 (3)','34 (4)','38 วรรคหนึ่ง','40','42','43','44 วรรคหนึ่ง','46'],
+    'อาญา':  ['33 วรรคสอง','34 (2)','35 (1)','35 (2)','35 (3)','35 (4)','38 วรรคสอง','39','44 วรรคสอง','45','49','72'],
+  },
+  'สถานประกอบการ': {
+    'พินัย': ['20','24','28 (9)','28 (10)','28 (11)','28 (12)','28 (13)','29 วรรคสอง','35','41'],
+    'อาญา':  ['12'],
+  }
+};
+
+const sampleData = [
+  { ref:'สธ ๐๓๐๒.๐๖/๒๔๓', date:'24 ก.พ. 2569', offender:'บางประกอก เอ็มอาร์ไอ คลินิกฯ', company:'บริษัท บางประกอก ฮอสพิทอล กรุ๊ป จำกัด', act:'สถานพยาบาล', section:'34 (4)', penalty:'พินัย', amount:20000, status:'รอออกใบเสร็จ' },
+  { ref:'สธ ๐๓๐๒.๐๖/๒๑๘', date:'18 ก.พ. 2569', offender:'เมดิก้า เวลเนส คลินิก', company:'บริษัท เมดิก้า เฮลท์ แคร์ จำกัด', act:'สถานพยาบาล', section:'38 วรรคหนึ่ง', penalty:'พินัย', amount:30000, status:'ออกใบเสร็จแล้ว' },
+  { ref:'สธ ๐๓๐๒.๐๖/๑๙๕', date:'12 ก.พ. 2569', offender:'เฮลท์แลนด์ สปา & นวดแผนไทย', company:'', act:'สถานประกอบการ', section:'28 (9)', penalty:'พินัย', amount:10000, status:'ส่งงานคลัง' },
+  { ref:'สธ ๐๓๐๒.๐๖/๑๗๒', date:'5 ก.พ. 2569', offender:'คลินิกเวชกรรม พรีเมียร์ เมดิคอล', company:'บริษัท พรีเมียร์ เมดิคอล กรุ๊ป จำกัด', act:'สถานพยาบาล', section:'35 (1)', penalty:'อาญา', amount:50000, status:'ออกใบเสร็จแล้ว' },
+  { ref:'สธ ๐๓๐๒.๐๖/๑๔๘', date:'28 ม.ค. 2569', offender:'บิวตี้ เวลเนส คลินิก', company:'', act:'สถานพยาบาล', section:'26', penalty:'พินัย', amount:15000, status:'รอออกใบเสร็จ' },
+  { ref:'สธ ๐๓๐๒.๐๖/๑๓๑', date:'20 ม.ค. 2569', offender:'ไทย เวลเนส สปา', company:'บริษัท ไทย เวลเนส จำกัด', act:'สถานประกอบการ', section:'35', penalty:'พินัย', amount:8000, status:'ส่งงานคลัง' },
+  { ref:'สธ ๐๓๐๒.๐๖/๑๑๐', date:'14 ม.ค. 2569', offender:'โนวา คลินิกเวชกรรม', company:'', act:'สถานพยาบาล', section:'32', penalty:'พินัย', amount:12000, status:'ออกใบเสร็จแล้ว' },
+  { ref:'สธ ๐๓๐๒.๐๖/๐๙๘', date:'8 ม.ค. 2569', offender:'ซิตี้ เมดิคอล คลินิก สาขา 2', company:'บริษัท ซิตี้ เมดิคอล จำกัด', act:'สถานพยาบาล', section:'34 (3)', penalty:'พินัย', amount:25000, status:'รอออกใบเสร็จ' },
+  { ref:'สธ ๐๓๐๒.๐๖/๐๗๗', date:'3 ม.ค. 2569', offender:'ลักซ์ สปา & เวลเนส', company:'', act:'สถานประกอบการ', section:'24', penalty:'พินัย', amount:6000, status:'ส่งงานคลัง' },
+  { ref:'สธ ๐๓๐๒.๐๖/๐๕๕', date:'26 ธ.ค. 2568', offender:'แกรนด์ เมดิคอล คลินิก', company:'บริษัท แกรนด์ เมดิคอล กรุ๊ป จำกัด', act:'สถานพยาบาล', section:'33 วรรคสอง', penalty:'อาญา', amount:100000, status:'ออกใบเสร็จแล้ว' },
+];
+
+let filteredData = [...sampleData];
+
+function fmtMoney(n) {
+  return n.toLocaleString('th-TH') + ' บาท';
+}
+
+function statusBadge(s) {
+  const m = { 'รอออกใบเสร็จ':'badge-pending', 'ออกใบเสร็จแล้ว':'badge-issued', 'ส่งงานคลัง':'badge-waiting' };
+  return `<span class="badge ${m[s]||''}">${s}</span>`;
+}
+
+function penaltyTag(t) {
+  return `<span class="penalty-tag ${t==='พินัย'?'penalty-phinae':'penalty-aya'}">${t}</span>`;
+}
+
+function actionBtns(row, i) {
+  const canReceipt = row.status === 'รอออกใบเสร็จ';
+  return `
+    <div class="row-actions">
+      <button class="act-btn act-view" onclick="viewRow(${i},event)">ดู</button>
+      ${canReceipt ? `<button class="act-btn act-receipt" onclick="goReceipt(${i},event)">ออกใบเสร็จ</button>` : ''}
+      <button class="act-btn act-edit" onclick="editRow(${i},event)">แก้ไข</button>
+    </div>`;
+}
+
+function renderTable(data) {
+  const tbody = document.getElementById('tableBody');
+  const empty = document.getElementById('emptyState');
+  document.getElementById('rowCount').textContent = data.length + ' รายการ';
+  if (data.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  tbody.innerHTML = data.map((r,i) => `
+    <tr>
+      <td>
+        <div class="ref-no">${r.ref}</div>
+        <div class="ref-date">${r.date}</div>
+      </td>
+      <td>
+        <div class="offender-name">${r.offender}</div>
+        ${r.company ? `<div class="offender-company">${r.company}</div>` : ''}
+      </td>
+      <td>
+        <div style="font-size:12px;color:var(--gray4);">พ.ร.บ.${r.act}</div>
+        <div style="font-weight:600;font-size:13px;">ม.${r.section}</div>
+      </td>
+      <td>${penaltyTag(r.penalty)}</td>
+      <td>
+        <div class="amount">${r.amount.toLocaleString('th-TH')}</div>
+        <div class="amount-text">บาท</div>
+      </td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${actionBtns(r,i)}</td>
+    </tr>
+  `).join('');
+}
+
+function filterTable() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const act = document.getElementById('filterAct').value;
+  const penalty = document.getElementById('filterPenalty').value;
+  const status = document.getElementById('filterStatus').value;
+  filteredData = sampleData.filter(r => {
+    const matchQ = !q || r.offender.toLowerCase().includes(q) || r.ref.includes(q) || r.company.toLowerCase().includes(q);
+    const matchAct = !act || r.act.includes(act.replace('สถานพยาบาล','สถานพยาบาล').replace('สถานประกอบการ','สถานประกอบการ'));
+    const matchP = !penalty || r.penalty === penalty;
+    const matchS = !status || r.status === status;
+    return matchQ && matchAct && matchP && matchS;
+  });
+  renderTable(filteredData);
+}
+
+function clearFilter() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('filterAct').value = '';
+  document.getElementById('filterPenalty').value = '';
+  document.getElementById('filterStatus').value = '';
+  filteredData = [...sampleData];
+  renderTable(filteredData);
+}
+
+// ===== MODAL =====
+function openModal() {
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+function closeModalOutside(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function updateSection() {
+  const act = document.getElementById('f_act').value;
+  const pen = document.getElementById('f_penalty_type').value;
+  const sel = document.getElementById('f_section');
+  sel.innerHTML = '<option value="">— เลือกมาตรา —</option>';
+  if (act && pen && sectionMap[act] && sectionMap[act][pen]) {
+    sectionMap[act][pen].forEach(s => {
+      sel.innerHTML += `<option value="${s}">มาตรา ${s}</option>`;
+    });
+  }
+}
+
+const numText = n => {
+  if (!n) return '';
+  const units = ['','หนึ่ง','สอง','สาม','สี่','ห้า','หก','เจ็ด','แปด','เก้า'];
+  const pos = ['','สิบ','ร้อย','พัน','หมื่น','แสน','ล้าน'];
+  const digits = String(parseInt(n)).split('').reverse();
+  let result = '';
+  digits.forEach((d,i) => {
+    if (d !== '0') result = units[parseInt(d)] + pos[i] + result;
+  });
+  return result + 'บาทถ้วน';
+};
+
+function updateAmountText() {
+  const v = document.getElementById('f_amount').value;
+  document.getElementById('f_amount_text').value = v ? numText(v) : '';
+}
+
+function saveRecord() {
+  const ref = document.getElementById('f_refno').value;
+  const off = document.getElementById('f_offender').value;
+  if (!ref || !off) { showToast('⚠️ กรุณากรอกข้อมูลที่จำเป็น', false); return; }
+  closeModal();
+  showToast('✅ บันทึกรายการปรับเรียบร้อยแล้ว', true);
+}
+
+function viewRow(i, e) { e.stopPropagation(); showToast('📄 เปิดดูรายละเอียด: ' + filteredData[i].ref); }
+function goReceipt(i, e) { e.stopPropagation(); showToast('🧾 เปิดหน้าออกใบเสร็จ: ' + filteredData[i].ref); }
+function editRow(i, e) { e.stopPropagation(); showToast('✏️ เปิดแก้ไข: ' + filteredData[i].ref); }
+
+function showToast(msg, success = true) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (success ? ' success' : '') + ' show';
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// INIT
+renderTable(sampleData);
+</script>
+</body>
+</html>

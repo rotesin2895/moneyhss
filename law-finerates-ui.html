@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>บันทึกอัตราค่าปรับ — กสพ.</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1e3a5f;--law:#4338ca;--law-l:#eef2ff;--law-m:#c7d2fe;
+  --grn:#065f46;--grn-l:#d1fae5;
+  --red:#991b1b;--red-l:#fee2e2;
+  --amb:#92400e;--amb-l:#fef3c7;--amb-m:#fcd34d;
+  --bg:#f1f5f9;--panel:#fff;--panel2:#f8fafc;
+  --border:#e2e8f0;--border2:#cbd5e1;
+  --tx1:#0f172a;--tx2:#475569;--tx3:#94a3b8;
+  --shadow:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.04);
+}
+html,body{background:var(--bg);color:var(--tx1);font-family:'Sarabun',sans-serif;font-size:15px;min-height:100vh}
+.topbar{background:var(--navy);height:52px;display:flex;align-items:center;padding:0 20px;gap:14px;position:sticky;top:0;z-index:200;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.tb-brand{font-size:11px;font-weight:700;color:rgba(255,255,255,.85);line-height:1.35}
+.tb-sep{width:1px;height:26px;background:rgba(255,255,255,.15)}
+.tb-pg{font-size:14.5px;font-weight:700;color:#fff}
+.tb-role{font-size:10px;font-family:'IBM Plex Mono';font-weight:600;padding:2px 8px;border-radius:4px;background:var(--law-m);color:var(--law)}
+.tb-r{margin-left:auto;display:flex;align-items:center;gap:10px}
+.tb-av{width:28px;height:28px;border-radius:50%;background:var(--law-l);color:var(--law);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.tb-name{font-size:12px;color:rgba(255,255,255,.7)}
+.page-tabs{background:var(--panel);border-bottom:1px solid var(--border);padding:0 24px;display:flex;gap:2px}
+.ptab{padding:13px 18px;font-size:13px;font-weight:600;color:var(--tx3);cursor:pointer;border-bottom:2px solid transparent;transition:.15s;white-space:nowrap}
+.ptab.on{color:var(--law);border-bottom-color:var(--law)}
+.ptab:hover:not(.on){color:var(--tx2)}
+.cnt-b{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;background:var(--amb-l);color:var(--amb);margin-left:5px;font-family:'IBM Plex Mono'}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+.psect{display:none}.psect.on{display:block}
+.two{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.chd{padding:14px 20px;background:var(--panel2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.chd-tt{font-size:14px;font-weight:700;color:var(--navy)}
+.chd-st{font-size:11.5px;color:var(--tx3);margin-top:2px}
+.cbody{padding:20px}
+.law-tog{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px}
+.lopt{padding:13px 16px;background:var(--panel2);cursor:pointer;transition:.15s}
+.lopt:hover{background:var(--law-l)}
+.lopt.on{background:var(--law-l);box-shadow:inset 0 0 0 2px var(--law)}
+.lopt-row{display:flex;align-items:flex-start;gap:8px}
+.lopt-name{font-size:13px;font-weight:700;color:var(--navy)}
+.lopt.on .lopt-name{color:var(--law)}
+.lopt-sub{font-size:11px;color:var(--tx3);margin-top:2px}
+.lopt-chk{width:16px;height:16px;border-radius:50%;border:2px solid var(--border2);margin-left:auto;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;transition:.15s}
+.lopt.on .lopt-chk{background:var(--law);border-color:var(--law);color:#fff}
+.vsw{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1.5px solid var(--border2);border-radius:8px;overflow:hidden;margin-bottom:18px}
+.vbtn{padding:9px 12px;text-align:center;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--tx3);background:var(--panel2);border-right:1px solid var(--border2);transition:.15s}
+.vbtn:last-child{border-right:none}
+.vbtn.on.cr{background:#fff1f0;color:#c0392b}
+.vbtn.on.ci{background:var(--amb-l);color:var(--amb)}
+.fg{display:grid;gap:14px}.fg2{grid-template-columns:1fr 1fr}
+.frow{display:flex;flex-direction:column;gap:5px}
+.flbl{font-size:12px;font-weight:700;color:var(--tx2);display:flex;align-items:center;gap:4px}
+.req{color:var(--red);font-size:14px;line-height:1}
+.opt{font-size:10.5px;color:var(--tx3);font-weight:400}
+.fin{height:40px;border:1.5px solid var(--border2);border-radius:8px;padding:0 12px;font-size:14px;font-family:'Sarabun',sans-serif;color:var(--tx1);background:var(--panel);width:100%;transition:border-color .15s,box-shadow .15s}
+.fin:focus{outline:none;border-color:var(--law);box-shadow:0 0 0 3px var(--law-l)}
+.fsel{height:40px;border:1.5px solid var(--border2);border-radius:8px;padding:0 32px 0 12px;font-size:14px;font-family:'Sarabun',sans-serif;color:var(--tx1);background:var(--panel) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E") no-repeat right 12px center;width:100%;cursor:pointer;appearance:none;transition:border-color .15s}
+.fsel:focus{outline:none;border-color:var(--law);box-shadow:0 0 0 3px var(--law-l)}
+.fhint{font-size:11px;color:var(--tx3);line-height:1.5}
+.fhint.w{color:var(--amb)}.fhint.i{color:#1d4ed8}
+.fdiv{height:1px;background:var(--border);margin:4px 0 2px}
+.amt-row{display:flex;align-items:center;gap:8px}
+.amt-row .fin{flex:1}
+.amt-sep{font-size:12px;color:var(--tx3);font-weight:600;white-space:nowrap}
+.pv-card{background:linear-gradient(135deg,#f0f4ff,#eef2ff);border:1.5px solid var(--law-m);border-radius:12px;padding:18px;position:sticky;top:72px}
+.pv-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--law);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.pv-title::before,.pv-title::after{content:'';flex:1;height:1.5px;background:var(--law-m)}
+.pvi{padding:8px 0;border-bottom:1px solid rgba(99,102,241,.12);display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.pvi:last-child{border-bottom:none}
+.pvk{font-size:11.5px;color:var(--tx3);font-weight:600;flex-shrink:0}
+.pvv{font-size:13px;font-weight:700;color:var(--navy);font-family:'IBM Plex Mono';text-align:right;word-break:break-all}
+.pve{color:var(--tx3);font-style:italic;font-family:'Sarabun';font-weight:400}
+.act{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:var(--panel2);border-top:1px solid var(--border)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:0 18px;height:38px;border-radius:8px;font-size:13.5px;font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;border:none;transition:.15s}
+.btn-p{background:var(--law);color:#fff}
+.btn-p:hover{background:#3730a3;box-shadow:0 4px 12px rgba(67,56,202,.35);transform:translateY(-1px)}
+.btn-o{background:transparent;border:1.5px solid var(--border2);color:var(--tx2)}
+.btn-o:hover{border-color:var(--tx2);color:var(--tx1)}
+.btn-g{background:transparent;color:var(--tx3);border:none}
+.btn-g:hover{background:var(--bg);color:var(--tx2)}
+.btn-sm{height:32px;padding:0 12px;font-size:12px}
+.btn-d{background:var(--red-l);color:var(--red);border:1px solid #fca5a5}
+.chip{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700}
+.cc{background:#fff1f0;color:#c0392b}.ci{background:var(--amb-l);color:var(--amb)}.cl{background:var(--law-l);color:var(--law)}.cg{background:var(--grn-l);color:var(--grn)}
+.fb{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.tw{overflow-x:auto;border-radius:12px;border:1px solid var(--border)}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--panel)}
+.tbl thead th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--tx3);background:var(--panel2);border-bottom:1px solid var(--border);white-space:nowrap}
+.tbl tbody td{padding:10px 14px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.tbl tbody tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover td{background:#f8fafc}
+.mono{font-family:'IBM Plex Mono';font-weight:600;font-size:12px}
+.stag{display:inline-block;font-family:'IBM Plex Mono';font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--law-l);color:var(--law)}
+.dds{margin-bottom:24px}
+.ddt{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.ddst{font-size:12px;color:var(--tx3);margin-bottom:12px}
+.ddw{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
+.dtbl{width:100%;border-collapse:collapse;font-size:13px;background:var(--panel)}
+.dtbl thead th{padding:9px 13px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--tx3);background:var(--panel2);border-bottom:1px solid var(--border);white-space:nowrap}
+.dtbl tbody td{padding:9px 13px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+.dtbl tbody tr:last-child td{border-bottom:none}
+.dtbl tbody tr:hover td{background:var(--bg)}
+.dtbl td.fn{font-family:'IBM Plex Mono';font-size:12px;font-weight:600;color:var(--law);white-space:nowrap}
+.dtbl td.tp{font-family:'IBM Plex Mono';font-size:11px;color:var(--tx2)}
+.dtbl td.ex{font-size:12px;color:var(--tx2)}
+.dtbl td.nt{font-size:12px;color:var(--tx2);line-height:1.55}
+.dgrp td{background:var(--navy)!important;color:rgba(255,255,255,.9);font-size:11px;font-weight:700;padding:6px 13px;letter-spacing:.4px}
+.tcode{font-size:13px;background:var(--law-l);color:var(--law);font-family:'IBM Plex Mono';padding:2px 8px;border-radius:5px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card,.pv-card,.fb,.tw{animation:fadeUp .25s ease both}
+@media(max-width:760px){.two{grid-template-columns:1fr}.fg2{grid-template-columns:1fr}.pv-card{position:static}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-brand">กรมสนับสนุนบริการสุขภาพ<br>ระบบคลัง กสพ.</div>
+  <div class="tb-sep"></div>
+  <div class="tb-pg">⚖️ อัตราค่าปรับ</div>
+  <div class="tb-role">LAW_STAFF</div>
+  <div class="tb-r">
+    <div class="tb-name">นายธนกร วิชัยดิษฐ์</div>
+    <div class="tb-av">ธก</div>
+  </div>
+</div>
+
+<div class="page-tabs">
+  <div class="ptab on" id="tab0">➕ บันทึกอัตราใหม่</div>
+  <div class="ptab" id="tab1">📋 รายการอัตราทั้งหมด <span class="cnt-b" id="cnt-b">26</span></div>
+
+</div>
+
+<!-- ═══ FORM PAGE ═══ -->
+<div class="psect on" id="pg-form">
+<div class="wrap">
+<div class="two">
+
+  <!-- LEFT -->
+  <div>
+    <!-- 1. พ.ร.บ. -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="chd"><span style="font-size:17px">📜</span>
+        <div><div class="chd-tt">พระราชบัญญัติ</div><div class="chd-st">เลือก พ.ร.บ. ที่ต้องการบันทึกอัตราค่าปรับ</div></div>
+      </div>
+      <div class="cbody" style="padding:14px 16px">
+        <div class="law-tog">
+          <div class="lopt on" onclick="pickLaw(this,'2541')">
+            <div class="lopt-row">
+              <div><div class="lopt-name">พ.ร.บ. สถานพยาบาล</div><div class="lopt-sub">พ.ศ. 2541 (แก้ไข 2559)</div></div>
+              <div class="lopt-chk">✓</div>
+            </div>
+          </div>
+          <div class="lopt" onclick="pickLaw(this,'2559')">
+            <div class="lopt-row">
+              <div><div class="lopt-name">พ.ร.บ. สถานประกอบการฯ</div><div class="lopt-sub">พ.ศ. 2559</div></div>
+              <div class="lopt-chk"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. ความผิด -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="chd"><span style="font-size:17px">📌</span>
+        <div><div class="chd-tt">ประเภทและฐานความผิด</div><div class="chd-st">ระบุประเภทโทษ มาตราความผิด และมาตราระวางโทษ</div></div>
+      </div>
+      <div class="cbody">
+        <div class="frow" style="margin-bottom:14px">
+          <div class="flbl">ประเภทความผิด <span class="req">*</span></div>
+          <div class="vsw">
+            <div class="vbtn cr on" id="bcr" onclick="pickV('cr')">⚖️ อาญา</div>
+            <div class="vbtn ci" id="bci" onclick="pickV('ci')">💰 พินัย</div>
+          </div>
+        </div>
+        <div class="fg fg2">
+          <div class="frow">
+            <div class="flbl">มาตราฐานความผิด <span class="req">*</span></div>
+            <input class="fin" id="f-off" placeholder="เช่น 33, 35(1), 38 วรรคสอง" oninput="sy()">
+            <div class="fhint">มาตราที่ผู้กระทำผิด (ฐานความผิด)</div>
+          </div>
+          <div class="frow">
+            <div class="flbl" id="lbl-pen">มาตราระวางโทษ <span class="req">*</span></div>
+            <input class="fin" id="f-pen" placeholder="เช่น 62, 65, 68 วรรคสอง" oninput="sy()">
+            <div class="fhint" id="hint-pen">มาตราที่กำหนดระวางโทษ</div>
+          </div>
+        </div>
+        <div class="fdiv" style="margin-top:14px"></div>
+        <div class="frow" style="margin-top:14px">
+          <div class="flbl">คำอธิบายความผิด </div>
+          <input class="fin" id="f-desc" placeholder="เช่น ดำเนินกิจการสถานพยาบาลโดยไม่ได้รับอนุญาต" oninput="sy()">
+          <div class="fhint">ข้อความที่ใช้แสดงในใบเสร็จรับเงิน</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. อัตรา -->
+    <div class="card">
+      <div class="chd"><span style="font-size:17px">💰</span>
+        <div><div class="chd-tt">อัตราค่าปรับ</div><div class="chd-st">ระบุจำนวนเงินตามตารางอัตราโทษ</div></div>
+      </div>
+      <div class="cbody">
+        <div class="fg fg2" style="margin-bottom:16px">
+          <div class="frow">
+            <div class="flbl">ประเภทอัตรา <span class="req">*</span></div>
+            <select class="fsel" id="f-rtype" onchange="togRF();sy()">
+              <option value="MAX">ไม่เกิน (มีเพดาน)</option>
+              <option value="FIXED">กำหนดตายตัว</option>
+              <option value="RANGE">ช่วง ขั้นต่ำ–สูงสุด</option>
+            </select>
+          </div>
+          <div class="frow" id="row-fixed" style="display:none">
+            <div class="flbl">จำนวนเงิน (บาท) <span class="req">*</span></div>
+            <input class="fin" id="f-fixed" type="number" min="0" step="100" placeholder="0" oninput="sy()">
+            <div class="fhint">ค่าปรับคงที่ต่อกระทง</div>
+          </div>
+        </div>
+        <div id="blk-max" class="frow">
+          <div class="flbl">อัตราสูงสุด "ไม่เกิน" (บาท) <span class="req">*</span></div>
+          <select class="fsel" id="f-max" onchange="sy()">
+            <option value="">— เลือก —</option>
+            <option value="2000">2,000</option>
+            <option value="10000">10,000</option>
+            <option value="20000">20,000</option>
+            <option value="30000">30,000</option>
+            <option value="40000">40,000</option>
+            <option value="50000">50,000</option>
+          </select>
+          <div class="fhint w">ตามตาราง: 2K / 10K / 20K / 30K / 40K / 50K บาท</div>
+        </div>
+        <div id="blk-range" style="display:none" class="frow">
+          <div class="flbl">ช่วงอัตราค่าปรับ (บาท) <span class="req">*</span></div>
+          <div class="amt-row">
+            <input class="fin" id="f-min" type="number" min="0" step="100" placeholder="ขั้นต่ำ" oninput="sy()">
+            <span class="amt-sep">—</span>
+            <input class="fin" id="f-rmx" type="number" min="0" step="100" placeholder="ขั้นสูง" oninput="sy()">
+          </div>
+        </div>
+        <div class="fdiv" style="margin:16px 0 14px"></div>
+        <div class="frow">
+          <div class="flbl">หมายเหตุ <span class="opt">— ถ้ามี</span></div>
+          <input class="fin" id="f-note" placeholder="เช่น ตามประกาศ ..." oninput="sy()">
+        </div>
+      </div>
+      <div class="act">
+        <button class="btn btn-g" onclick="clr()">🗑 ล้าง</button>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-o" onclick="saveNew()">💾 บันทึก &amp; เพิ่มใหม่</button>
+          <button class="btn btn-p" onclick="saveList()">✅ บันทึก</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Preview -->
+  <div>
+    <div class="pv-card">
+      <div class="pv-title">Preview</div>
+      <div class="pvi"><span class="pvk">พ.ร.บ.</span><span class="pvv" id="pv-law">สถานพยาบาล 2541</span></div>
+      <div class="pvi"><span class="pvk">ประเภท</span><span class="pvv" id="pv-vt"><span class="chip cc">อาญา</span></span></div>
+      <div class="pvi"><span class="pvk">ฐานความผิด ม.</span><span class="pvv pve" id="pv-off">—</span></div>
+      <div class="pvi"><span class="pvk" id="pvk-pen">ระวางโทษ ม.</span><span class="pvv pve" id="pv-pen">—</span></div>
+      <div class="pvi"><span class="pvk">คำอธิบาย</span><span class="pvv pve" id="pv-desc" style="font-family:'Sarabun';font-size:12px;max-width:200px;text-align:right">—</span></div>
+      <div class="pvi"><span class="pvk">อัตราค่าปรับ</span><span class="pvv pve" id="pv-rate">—</span></div>
+      <div class="pvi"><span class="pvk">บันทึกโดย</span><span class="pvv" style="font-family:'Sarabun';font-size:12px">นายธนกร วิชัยดิษฐ์</span></div>
+    </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<!-- ═══ LIST PAGE ═══ -->
+<div class="psect" id="pg-list">
+<div class="wrap">
+  <div class="fb">
+    <select class="fsel" style="width:190px">
+      <option>ทุก พ.ร.บ.</option>
+      <option>พ.ร.บ. สถานพยาบาล 2541</option>
+      <option>พ.ร.บ. สถานประกอบการฯ 2559</option>
+    </select>
+    <select class="fsel" style="width:130px">
+      <option>ทุกประเภท</option>
+      <option>อาญา</option>
+      <option>พินัย</option>
+    </select>
+    <input class="fin" placeholder="🔍 ค้นหามาตรา / คำอธิบาย" style="flex:1;min-width:160px;height:38px">
+    <button class="btn btn-p btn-sm">ค้นหา</button>
+    <button class="btn btn-o btn-sm" onclick="goTab(0)">➕ เพิ่มใหม่</button>
+  </div>
+  <div class="tw">
+    <table class="tbl">
+      <thead><tr><th>#</th><th>พ.ร.บ.</th><th>ประเภท</th><th>ฐานความผิด (ม.)</th><th>ระวางโทษ/พินัย (ม.)</th><th>อัตราค่าปรับ</th><th>คำอธิบาย</th><th>บันทึกโดย</th><th>จัดการ</th></tr></thead>
+      <tbody id="ltb"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ═══ DICT PAGE ═══ -->
+<div class="psect" id="pg-dict">
+<div class="wrap">
+
+  <!-- laws -->
+  <div class="dds">
+    <div class="ddt"><span class="tcode">laws</span> Master — พระราชบัญญัติ</div>
+    <div class="ddst">ตาราง master เก็บรายชื่อ พ.ร.บ. · Admin กำหนดล่วงหน้า ไม่ได้กรอกผ่านหน้าจอนี้</div>
+    <div class="ddw"><table class="dtbl">
+      <thead><tr><th>Column</th><th>Type</th><th>Null</th><th>Default</th><th>ตัวอย่าง</th><th>คำอธิบาย</th></tr></thead>
+      <tbody>
+        <tr><td class="fn">id</td><td class="tp">TINYINT PK</td><td>NOT NULL</td><td>AUTO_INC</td><td class="ex">1</td><td class="nt">รหัส พ.ร.บ.</td></tr>
+        <tr><td class="fn">law_code</td><td class="tp">VARCHAR(20)</td><td>NOT NULL</td><td>—</td><td class="ex">HOSP_2541</td><td class="nt">รหัสย่อ เช่น HOSP_2541, WELLNESS_2559</td></tr>
+        <tr><td class="fn">law_name_th</td><td class="tp">VARCHAR(300)</td><td>NOT NULL</td><td>—</td><td class="ex">พ.ร.บ. สถานพยาบาล พ.ศ. 2541</td><td class="nt">ชื่อเต็มภาษาไทย</td></tr>
+        <tr><td class="fn">law_year</td><td class="tp">SMALLINT</td><td>NOT NULL</td><td>—</td><td class="ex">2541</td><td class="nt">พ.ศ. ที่ประกาศใช้</td></tr>
+        <tr><td class="fn">amendment_year</td><td class="tp">SMALLINT</td><td>NULL</td><td>NULL</td><td class="ex">2559</td><td class="nt">พ.ศ. ที่แก้ไขล่าสุด</td></tr>
+        <tr><td class="fn">is_active</td><td class="tp">TINYINT(1)</td><td>NOT NULL</td><td>1</td><td class="ex">1</td><td class="nt">1 = ใช้งาน</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- law_violations -->
+  <div class="dds">
+    <div class="ddt"><span class="tcode">law_violations</span> ฐานความผิด — มาตรา</div>
+    <div class="ddst">เก็บทุกมาตราจากทุก พ.ร.บ. · FK → laws.id · <strong>กรอกจากหน้าจอนี้ (ส่วน "ประเภทและฐานความผิด")</strong></div>
+    <div class="ddw"><table class="dtbl">
+      <thead><tr><th>Column</th><th>Type</th><th>Null</th><th>Default</th><th>ตัวอย่าง</th><th>คำอธิบาย</th></tr></thead>
+      <tbody>
+        <tr class="dgrp"><td colspan="6">🔑 Identity</td></tr>
+        <tr><td class="fn">id</td><td class="tp">BIGINT PK</td><td>NOT NULL</td><td>AUTO_INC</td><td class="ex">5</td><td class="nt">รหัสความผิด</td></tr>
+        <tr><td class="fn">law_id</td><td class="tp">TINYINT FK</td><td>NOT NULL</td><td>—</td><td class="ex">1</td><td class="nt">FK → laws.id · ดึงจากปุ่ม พ.ร.บ. ที่เลือก</td></tr>
+        <tr class="dgrp"><td colspan="6">📌 มาตราและประเภท</td></tr>
+        <tr><td class="fn">offense_section</td><td class="tp">VARCHAR(50)</td><td>NOT NULL</td><td>—</td><td class="ex">35(1)</td><td class="nt">มาตราฐานความผิด · <strong>กรอกโดย LAW_STAFF</strong></td></tr>
+        <tr><td class="fn">penalty_section</td><td class="tp">VARCHAR(50)</td><td>NOT NULL</td><td>—</td><td class="ex">65</td><td class="nt">มาตราระวางโทษ หรือ ปรับเป็นพินัย · <strong>กรอกโดย LAW_STAFF</strong></td></tr>
+        <tr><td class="fn">violation_type</td><td class="tp">ENUM</td><td>NOT NULL</td><td>—</td><td class="ex">CRIMINAL</td><td class="nt">CRIMINAL = อาญา · CIVIL = พินัย · ดึงจากปุ่มที่เลือก</td></tr>
+        <tr class="dgrp"><td colspan="6">📝 คำอธิบาย</td></tr>
+        <tr><td class="fn">description</td><td class="tp">TEXT</td><td>NOT NULL</td><td>—</td><td class="ex">ดำเนินกิจการโดยไม่ได้รับอนุญาต</td><td class="nt">คำอธิบายความผิด · ใช้แสดงในใบเสร็จ · <strong>กรอกโดย LAW_STAFF</strong></td></tr>
+        <tr><td class="fn">is_active</td><td class="tp">TINYINT(1)</td><td>NOT NULL</td><td>1</td><td class="ex">1</td><td class="nt">1 = ใช้งาน</td></tr>
+        <tr class="dgrp"><td colspan="6">🕐 Audit</td></tr>
+        <tr><td class="fn">created_by</td><td class="tp">INT FK</td><td>NOT NULL</td><td>—</td><td class="ex">12</td><td class="nt">FK → users.id · ดึงจาก session อัตโนมัติ</td></tr>
+        <tr><td class="fn">created_at</td><td class="tp">DATETIME</td><td>NOT NULL</td><td>NOW()</td><td class="ex">2568-01-15 09:00:00</td><td class="nt">วันเวลาที่บันทึก · ระบบเติมให้</td></tr>
+        <tr><td class="fn">updated_at</td><td class="tp">DATETIME</td><td>NOT NULL</td><td>NOW()</td><td class="ex">2568-01-15 09:00:00</td><td class="nt">ON UPDATE NOW() อัตโนมัติ</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- fine_rates -->
+  <div class="dds">
+    <div class="ddt"><span class="tcode">fine_rates</span> อัตราค่าปรับ</div>
+    <div class="ddst">เก็บอัตราค่าปรับต่อมาตรา · FK → law_violations.id · <strong>บันทึกตรง ใช้งานได้ทันที ไม่มี workflow อนุมัติ</strong></div>
+    <div class="ddw"><table class="dtbl">
+      <thead><tr><th>Column</th><th>Type</th><th>Null</th><th>Default</th><th>ตัวอย่าง</th><th>คำอธิบาย</th></tr></thead>
+      <tbody>
+        <tr class="dgrp"><td colspan="6">🔑 Identity</td></tr>
+        <tr><td class="fn">id</td><td class="tp">BIGINT PK</td><td>NOT NULL</td><td>AUTO_INC</td><td class="ex">101</td><td class="nt">รหัสอัตราค่าปรับ</td></tr>
+        <tr><td class="fn">violation_id</td><td class="tp">BIGINT FK</td><td>NOT NULL</td><td>—</td><td class="ex">5</td><td class="nt">FK → law_violations.id · INSERT พร้อมกัน 1 transaction</td></tr>
+        <tr class="dgrp"><td colspan="6">💰 อัตราค่าปรับ — เลือก 1 รูปแบบ (rate_type กำหนดว่า field ใดใช้)</td></tr>
+        <tr><td class="fn">rate_type</td><td class="tp">ENUM</td><td>NOT NULL</td><td>—</td><td class="ex">MAX</td><td class="nt">MAX = ไม่เกิน · FIXED = ตายตัว · RANGE = ช่วง min–max · <strong>กรอกโดย LAW_STAFF</strong></td></tr>
+        <tr><td class="fn">max_amount</td><td class="tp">DECIMAL(12,2)</td><td>NULL</td><td>NULL</td><td class="ex">20000.00</td><td class="nt">เพดาน "ไม่เกิน X บาท" · ใช้เมื่อ rate_type = MAX</td></tr>
+        <tr><td class="fn">fixed_amount</td><td class="tp">DECIMAL(12,2)</td><td>NULL</td><td>NULL</td><td class="ex">NULL</td><td class="nt">จำนวนตายตัว · ใช้เมื่อ rate_type = FIXED</td></tr>
+        <tr><td class="fn">min_amount</td><td class="tp">DECIMAL(12,2)</td><td>NULL</td><td>NULL</td><td class="ex">NULL</td><td class="nt">ขั้นต่ำ · ใช้เมื่อ rate_type = RANGE</td></tr>
+        <tr><td class="fn">range_max_amount</td><td class="tp">DECIMAL(12,2)</td><td>NULL</td><td>NULL</td><td class="ex">NULL</td><td class="nt">ขั้นสูง · ใช้เมื่อ rate_type = RANGE</td></tr>
+        <tr class="dgrp"><td colspan="6">📝 หมายเหตุ + Audit</td></tr>
+        <tr><td class="fn">note</td><td class="tp">TEXT</td><td>NULL</td><td>NULL</td><td class="ex">ตามประกาศ ...</td><td class="nt">หมายเหตุเพิ่มเติม · กรอกได้ ถ้ามี</td></tr>
+        <tr><td class="fn">created_by</td><td class="tp">INT FK</td><td>NOT NULL</td><td>—</td><td class="ex">12</td><td class="nt">FK → users.id · ดึงจาก session อัตโนมัติ</td></tr>
+        <tr><td class="fn">created_at</td><td class="tp">DATETIME</td><td>NOT NULL</td><td>NOW()</td><td class="ex">2568-01-15 09:00:00</td><td class="nt">วันเวลาที่บันทึก · ระบบเติมให้</td></tr>
+        <tr><td class="fn">updated_at</td><td class="tp">DATETIME</td><td>NOT NULL</td><td>NOW()</td><td class="ex">2568-01-15 09:00:00</td><td class="nt">ON UPDATE NOW() อัตโนมัติ</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- Mapping -->
+  <div class="dds">
+    <div class="ddt">🗺 Mapping จากตารางภาพ → DB Field</div>
+    <div class="ddst">คอลัมน์ในตารางภาพที่อัปโหลดมาตรงกับ field ใดใน DB</div>
+    <div class="ddw"><table class="dtbl">
+      <thead><tr><th>คอลัมน์ในภาพ</th><th>DB Field</th><th>ตาราง DB</th><th>ตัวอย่าง 2541 อาญา</th><th>ตัวอย่าง 2541 พินัย</th><th>ตัวอย่าง 2559</th></tr></thead>
+      <tbody>
+        <tr><td>ฐานความผิด มาตรา</td><td class="fn">offense_section</td><td class="tp">law_violations</td><td class="ex">33, 35(1), 38 วรรคสอง</td><td class="ex">21, 26, 38 วรรคหนึ่ง, 46</td><td class="ex">12, 28(9)–(13), 35</td></tr>
+        <tr><td>ระวางโทษ / ปรับเป็นพินัย มาตรา</td><td class="fn">penalty_section</td><td class="tp">law_violations</td><td class="ex">62, 65, 68 วรรคสอง</td><td class="ex">59, 61, 68 วรรคหนึ่ง, 70</td><td class="ex">42, 43, 44, 45, 46</td></tr>
+        <tr><td>ประเภทความผิด (อาญา/พินัย)</td><td class="fn">violation_type</td><td class="tp">law_violations</td><td class="ex">CRIMINAL</td><td class="ex">CIVIL</td><td class="ex">CRIMINAL / CIVIL</td></tr>
+        <tr><td>คำอธิบายความผิด</td><td class="fn">description</td><td class="tp">law_violations</td><td class="ex">ดำเนินกิจการโดยไม่ได้รับอนุญาต</td><td class="ex">ฝ่าฝืนข้อกำหนดพินัย</td><td class="ex">ดำเนินกิจการสปาโดยไม่ได้รับอนุญาต</td></tr>
+        <tr><td>อัตราค่าปรับ กรรมละ (บาท)</td><td class="fn">max_amount</td><td class="tp">fine_rates</td><td class="ex">20,000</td><td class="ex">2,000 / 10,000 / 20,000</td><td class="ex">10,000–50,000</td></tr>
+        <tr><td>ประเภทอัตรา</td><td class="fn">rate_type</td><td class="tp">fine_rates</td><td class="ex">MAX</td><td class="ex">MAX</td><td class="ex">MAX</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+</div>
+</div>
+
+<script>
+let lawC='2541', vtC='cr';
+
+const DATA=[
+  {law:'2541',vt:'CRIMINAL',off:'33 วรรคสอง',pen:'62',rt:'MAX',mx:20000,desc:'ดำเนินกิจการโดยไม่ได้รับอนุญาต'},
+  {law:'2541',vt:'CRIMINAL',off:'34 (2)',pen:'65',rt:'MAX',mx:20000,desc:'ดำเนินกิจการฝ่าฝืนเงื่อนไข'},
+  {law:'2541',vt:'CRIMINAL',off:'35 (1)',pen:'65',rt:'MAX',mx:20000,desc:'ไม่ปฏิบัติตามมาตรฐาน (1)'},
+  {law:'2541',vt:'CRIMINAL',off:'35 (2)',pen:'65',rt:'MAX',mx:20000,desc:'ไม่ปฏิบัติตามมาตรฐาน (2)'},
+  {law:'2541',vt:'CRIMINAL',off:'35 (3)',pen:'65',rt:'MAX',mx:20000,desc:'ไม่ปฏิบัติตามมาตรฐาน (3)'},
+  {law:'2541',vt:'CRIMINAL',off:'35 (4)',pen:'65',rt:'MAX',mx:20000,desc:'ไม่ปฏิบัติตามมาตรฐาน (4)'},
+  {law:'2541',vt:'CRIMINAL',off:'38 วรรคสอง',pen:'68 วรรคสอง',rt:'MAX',mx:20000,desc:'ฝ่าฝืนคำสั่งระงับ (อาญา)'},
+  {law:'2541',vt:'CRIMINAL',off:'39',pen:'58',rt:'MAX',mx:20000,desc:'ไม่แสดงใบอนุญาต'},
+  {law:'2541',vt:'CRIMINAL',off:'45',pen:'58',rt:'MAX',mx:20000,desc:'ไม่แจ้งข้อมูล'},
+  {law:'2541',vt:'CRIMINAL',off:'44 วรรคสอง',pen:'69',rt:'MAX',mx:20000,desc:'ขัดขวางเจ้าหน้าที่'},
+  {law:'2541',vt:'CRIMINAL',off:'49',pen:'58',rt:'MAX',mx:20000,desc:'ไม่จัดทำรายงาน'},
+  {law:'2541',vt:'CRIMINAL',off:'72',pen:'72',rt:'MAX',mx:20000,desc:'ผิดบทเฉพาะกาล'},
+  {law:'2541',vt:'CIVIL',off:'21',pen:'59',rt:'MAX',mx:10000,desc:'ฝ่าฝืนข้อกำหนดพินัย ม.21'},
+  {law:'2541',vt:'CIVIL',off:'26',pen:'61',rt:'MAX',mx:10000,desc:'ฝ่าฝืนข้อกำหนดพินัย ม.26'},
+  {law:'2541',vt:'CIVIL',off:'30',pen:'61',rt:'MAX',mx:10000,desc:'ฝ่าฝืนข้อกำหนดพินัย ม.30'},
+  {law:'2541',vt:'CIVIL',off:'31',pen:'59',rt:'MAX',mx:10000,desc:'ฝ่าฝืนข้อกำหนดพินัย ม.31'},
+  {law:'2541',vt:'CIVIL',off:'32',pen:'59',rt:'MAX',mx:10000,desc:'ฝ่าฝืนข้อกำหนดพินัย ม.32'},
+  {law:'2541',vt:'CIVIL',off:'34 (3)',pen:'64',rt:'MAX',mx:10000,desc:'ฝ่าฝืนข้อกำหนดพินัย ม.34(3)'},
+  {law:'2541',vt:'CIVIL',off:'34 (4)',pen:'64',rt:'MAX',mx:10000,desc:'ฝ่าฝืนข้อกำหนดพินัย ม.34(4)'},
+  {law:'2541',vt:'CIVIL',off:'38 วรรคหนึ่ง',pen:'68 วรรคหนึ่ง',rt:'MAX',mx:20000,desc:'ฝ่าฝืนคำสั่งระงับ (พินัย)'},
+  {law:'2541',vt:'CIVIL',off:'40',pen:'59',rt:'MAX',mx:10000,desc:'ฝ่าฝืนข้อกำหนดพินัย ม.40'},
+  {law:'2541',vt:'CIVIL',off:'42',pen:'61',rt:'MAX',mx:10000,desc:'ฝ่าฝืนข้อกำหนดพินัย ม.42'},
+  {law:'2541',vt:'CIVIL',off:'43',pen:'59',rt:'MAX',mx:10000,desc:'ฝ่าฝืนข้อกำหนดพินัย ม.43'},
+  {law:'2541',vt:'CIVIL',off:'44 วรรคหนึ่ง',pen:'61',rt:'MAX',mx:10000,desc:'ฝ่าฝืนข้อกำหนดพินัย ม.44'},
+  {law:'2541',vt:'CIVIL',off:'46',pen:'70',rt:'MAX',mx:2000,desc:'ไม่ปิดประกาศ'},
+  {law:'2559',vt:'CRIMINAL',off:'12',pen:'42',rt:'MAX',mx:50000,desc:'ดำเนินกิจการสปาโดยไม่ได้รับอนุญาต'},
+  {law:'2559',vt:'CIVIL',off:'41',pen:'41',rt:'MAX',mx:40000,desc:'ฝ่าฝืนมาตรฐานสถานประกอบการ'},
+  {law:'2559',vt:'CIVIL',off:'20',pen:'43',rt:'MAX',mx:20000,desc:'ไม่แจ้งข้อมูลตามกำหนด'},
+  {law:'2559',vt:'CIVIL',off:'24',pen:'44',rt:'MAX',mx:40000,desc:'ไม่ปฏิบัติตามมาตรฐาน'},
+  {law:'2559',vt:'CIVIL',off:'28 (9)',pen:'45',rt:'MAX',mx:30000,desc:'ฝ่าฝืนข้อห้าม (9)'},
+  {law:'2559',vt:'CIVIL',off:'28 (10)',pen:'45',rt:'MAX',mx:30000,desc:'ฝ่าฝืนข้อห้าม (10)'},
+  {law:'2559',vt:'CIVIL',off:'28 (11)',pen:'45',rt:'MAX',mx:30000,desc:'ฝ่าฝืนข้อห้าม (11)'},
+  {law:'2559',vt:'CIVIL',off:'28 (12)',pen:'45',rt:'MAX',mx:30000,desc:'ฝ่าฝืนข้อห้าม (12)'},
+  {law:'2559',vt:'CIVIL',off:'28 (13)',pen:'45',rt:'MAX',mx:30000,desc:'ฝ่าฝืนข้อห้าม (13)'},
+  {law:'2559',vt:'CIVIL',off:'29 วรรคสอง',pen:'45',rt:'MAX',mx:30000,desc:'ฝ่าฝืนข้อกำหนดวรรคสอง'},
+  {law:'2559',vt:'CIVIL',off:'35',pen:'46',rt:'MAX',mx:10000,desc:'ไม่ปฏิบัติตามคำสั่ง'},
+];
+document.getElementById('cnt-b').textContent = DATA.length;
+
+function buildList(){
+  const tb=document.getElementById('ltb'); tb.innerHTML='';
+  DATA.forEach((r,i)=>{
+    const isCr=r.vt==='CRIMINAL';
+    const fmt=r.rt==='MAX'?`ไม่เกิน ${r.mx.toLocaleString()}`:r.rt==='FIXED'?`${r.mx.toLocaleString()} บาท`:`${r.mn?.toLocaleString()}–${r.mx.toLocaleString()}`;
+    const ll=r.law==='2541'?'สถานพยาบาล 2541':'สถานประกอบการฯ 2559';
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td style="color:var(--tx3);font-size:12px">${i+1}</td><td style="font-size:12.5px;white-space:nowrap">${ll}</td><td><span class="chip ${isCr?'cc':'ci'}">${isCr?'อาญา':'พินัย'}</span></td><td><span class="stag">ม.${r.off}</span></td><td><span class="stag" style="background:var(--grn-l);color:var(--grn)">ม.${r.pen}</span></td><td style="font-family:'IBM Plex Mono';font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap">${fmt}</td><td style="font-size:12.5px;color:var(--tx2)">${r.desc}</td><td style="font-size:11.5px;color:var(--tx3)">นายธนกร ว.</td><td style="white-space:nowrap"><button class="btn btn-o btn-sm" style="margin-right:4px">✏️</button><button class="btn btn-d btn-sm">🗑</button></td>`;
+    tb.appendChild(tr);
+  });
+}
+buildList();
+
+function goTab(i){
+  document.querySelectorAll('.psect').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.psect')[i].classList.add('on');
+  document.querySelectorAll('.ptab')[i].classList.add('on');
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('.ptab').forEach((t,i)=>t.onclick=()=>goTab(i));
+
+function pickLaw(el,c){
+  document.querySelectorAll('.lopt').forEach(o=>{o.classList.remove('on');o.querySelector('.lopt-chk').textContent='';});
+  el.classList.add('on'); el.querySelector('.lopt-chk').textContent='✓';
+  lawC=c; sy();
+}
+
+function pickV(t){
+  vtC=t;
+  document.getElementById('bcr').className='vbtn cr'+(t==='cr'?' on':'');
+  document.getElementById('bci').className='vbtn ci'+(t==='ci'?' on':'');
+  const isCi=t==='ci';
+  document.getElementById('lbl-pen').innerHTML=(isCi?'มาตราปรับเป็นพินัย':'มาตราระวางโทษ')+' <span class="req">*</span>';
+  document.getElementById('hint-pen').textContent=isCi?'มาตราที่กำหนดอัตราพินัย':'มาตราที่กำหนดระวางโทษ';
+  document.getElementById('pvk-pen').textContent=isCi?'ปรับเป็นพินัย ม.':'ระวางโทษ ม.';
+  sy();
+}
+
+function togRF(){
+  const t=document.getElementById('f-rtype').value;
+  document.getElementById('blk-max').style.display=t==='MAX'?'':'none';
+  document.getElementById('blk-range').style.display=t==='RANGE'?'':'none';
+  document.getElementById('row-fixed').style.display=t==='FIXED'?'':'none';
+  sy();
+}
+
+function sy(){
+  const ll=lawC==='2541'?'สถานพยาบาล 2541':'สถานประกอบการฯ 2559';
+  document.getElementById('pv-law').textContent=ll;
+  document.getElementById('pv-vt').innerHTML=`<span class="chip ${vtC==='cr'?'cc':'ci'}">${vtC==='cr'?'อาญา':'พินัย'}</span>`;
+  const off=document.getElementById('f-off').value.trim();
+  const pvO=document.getElementById('pv-off'); pvO.textContent=off||'—'; pvO.className='pvv'+(off?'':' pve');
+  const pen=document.getElementById('f-pen').value.trim();
+  const pvP=document.getElementById('pv-pen'); pvP.textContent=pen||'—'; pvP.className='pvv'+(pen?'':' pve');
+  const desc=document.getElementById('f-desc').value.trim();
+  const pvD=document.getElementById('pv-desc'); pvD.textContent=desc||'—'; pvD.className='pvv'+(desc?'':' pve');
+  const rt=document.getElementById('f-rtype').value;
+  let rs='—';
+  if(rt==='MAX'){const v=document.getElementById('f-max').value; rs=v?`ไม่เกิน ${Number(v).toLocaleString()} บาท`:'—';}
+  else if(rt==='FIXED'){const v=document.getElementById('f-fixed').value; rs=v?`${Number(v).toLocaleString()} บาท (ตายตัว)`:'—';}
+  else if(rt==='RANGE'){const mn=document.getElementById('f-min').value,mx=document.getElementById('f-rmx').value; rs=(mn||mx)?`${mn?Number(mn).toLocaleString():'?'} – ${mx?Number(mx).toLocaleString():'?'} บาท`:'—';}
+  const pvR=document.getElementById('pv-rate'); pvR.textContent=rs; pvR.className='pvv'+(rs!=='—'?'':' pve');
+}
+
+function clr(){
+  ['f-off','f-pen','f-desc','f-fixed','f-note','f-min','f-rmx'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('f-max').value='';
+  document.getElementById('f-rtype').value='MAX';
+  togRF(); sy();
+}
+
+function saveNew(){
+  const v=['f-off','f-pen','f-desc'].map(id=>document.getElementById(id).value.trim());
+  if(v.some(x=>!x)){alert('กรุณากรอกข้อมูลที่จำเป็นให้ครบก่อน');return;}
+  alert('✅ บันทึกสำเร็จ\n\nพร้อมกรอกรายการถัดไป');
+  clr(); document.getElementById('f-off').focus();
+}
+function saveList(){
+  const v=['f-off','f-pen','f-desc'].map(id=>document.getElementById(id).value.trim());
+  if(v.some(x=>!x)){alert('กรุณากรอกข้อมูลที่จำเป็นให้ครบก่อน');return;}
+  alert('✅ บันทึกสำเร็จ'); goTab(1);
+}
+sy();
+</script>
+</body>
+</html>

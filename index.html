@@ -1,0 +1,517 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HS4 Health Service Support Standards System</title> 
+    <!-- External Resources -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="header-top">
+            <div class="container logo-container">
+                <div class="logo-wrapper">
+                    <a href="#" class="logo-text">
+                        <span style="color:#1db954; font-weight:800; font-size:1.3em;">HS4</span>
+                        <span style="color:#555; font-size:0.9em; margin-left:6px;">Health Service Support Standards System</span>
+                    </a>
+                </div>
+                <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        
+<div class="header-nav" id="main-nav">
+    <div class="container">
+        <nav>
+            <ul class="nav-links">
+                <!-- หน้าหลัก: เรียกใช้ฟังก์ชันที่ซ่อนหน้าอื่นทั้งหมดและโชว์หน้าแรก -->
+                <li><a href="javascript:void(0)" onclick="goToHome();">หน้าหลัก</a></li>
+                
+                <li class="has-submenu">
+                    <a href="javascript:void(0)">มาตรฐาน HS4 <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <ul class="submenu">
+                        <li><a href="manual/manual_hs4.pdf" target="_blank">คู่มือการใช้งานระบบ</a></li>
+                        <li><a href="manual/ebook/html/mobile" target="_blank">คู่มือกระบวนการส่งเสริม และพัฒนา HS4</a></li>
+                    </ul>
+                </li>
+
+                <li class="has-submenu">
+                    <a href="javascript:void(0)">สื่อมัลติมีเดียมาตรฐาน HS4 <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                    <ul class="submenu">
+                        <!-- เพิ่ม return false; เพื่อไม่ให้หน้าเด้ง -->
+                        <li><a href="#" onclick="showVideoPage('conference'); return false;"><i class="fas fa-video"></i> วีดีโอ ประชุมวิชาการ</a></li>
+                        <li><a href="#" onclick="showVideoPage('standards'); return false;"><i class="fas fa-film"></i> วีดีโอ มาตรฐานระบบ</a></li>
+                        <li><a href="https://www.youtube.com/playlist?list=PL6FCkVNXNljeaVotWci-_KBGHEF1aSfK6" target="_blank">วีดิโอมาตรฐานระบบบริการสุขภาพ</a></li>
+                    </ul>
+                </li>
+                
+                <!-- แก้ไข tag <a> ที่เขียนซ้ำ และใช้ return false; -->
+                <li><a href="#" onclick="showAllNewsPage(); return false;">ข่าวและกิจกรรม</a></li>
+                <li class="nav-active"><a href="hs4-faq-sidebar.html">สารพันปัญหา <span class="nav-faq-badge">FAQ</span></a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+       <!-- Hero Section -->
+        <section class="hero">
+            <div class="container hero-content">
+                <div class="hero-text">
+                    <span class="hero-badge">ระบบประเมินมาตรฐานสุขภาพ</span>
+                    <h1 style="font-size: 2.4em; color: #1d3557;">HS4 ยกระดับ มาตรฐานสุขภาพไทย</h1>
+                    <p>ระบบประเมินมาตรฐานสุขภาพที่ทันสมัย ช่วยยกระดับการให้บริการด้านสุขภาพในประเทศไทย ด้วยการประเมินที่เป็นระบบและมีมาตรฐาน</p>
+                    <div class="hero-buttons">
+                        <a href="https://hs4.hss.moph.go.th/login" class="btn btn-primary">
+                            <i class="fa-solid fa-hospital" style="font-size: 2em;"></i><br>
+                             เข้าสู่ระบบประเมิน</br>(สำหรับสถานพยาบาล)  
+                        </a>
+                        <a href="https://hs4.hss.moph.go.th/login-staff" class="btn btn-primary">
+                            <i class="fa-solid fa-user-tie" style="font-size: 2em;"></i><br>
+                             เข้าสู่ระบบประเมิน</br>(สำหรับผู้ตรวจประเมิน)  
+                        </a>
+                    </div>
+                    
+                </div>
+                <div class="hero-visual">
+                    <div class="visual-box">
+                        <!-- <i class="fas fa-microphone-alt fa-5x"></i> -->
+                        <h3>ระบบประเมินที่ทันสมัย</h3>
+                        <div class="image-container"><img src="../images/HS4 Logo.png"></div>
+                        <p>HS4 ช่วยให้โรงพยาบาลและหน่วยบริการสุขภาพสามารถประเมินและยกระดับมาตรฐานการบริการให้มีประสิทธิภาพ</p>
+                        <div class="badge-check"><i class="fas fa-check-circle"></i> ครอบคลุมทุกมิติของมาตรฐานสุขภาพ</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+     <!-- ============================================================
+     NEWS SECTION
+     ============================================================ -->
+    <section id="news">
+        <div class="container">
+            <div class="news-header-row reveal">
+                <div>
+                    <div class="section-tag">ข่าวสารและกิจกรรม</div>
+                    <h2 class="section-title" style="text-align:left; margin-bottom:0.25rem;">ข่าวสารและ<span>กิจกรรม</span></h2>
+                    <p style="color:#9ca3af; font-size:0.9rem; margin-top:0.5rem; margin-bottom:0;">ติดตามข่าวสารล่าสุดจากระบบมาตรฐานสุขภาพ HS4</p>
+                </div>
+                <button class="read-all-btn" onclick="showAllNewsPage()">อ่านข่าวทั้งหมด →</button>
+            </div>
+            <!-- View Stats Bar -->
+            <div class="vc-stats-bar" id="newsStatsBar">
+                <div class="vc-live"><div class="vc-live-dot"></div><span style="font-size:.75rem;color:#047857;font-weight:700;">LIVE</span></div>
+                <div class="vc-stat-sep"></div>
+                <div class="vc-stat-item"><i class="fas fa-eye"></i> ยอดชมข่าวทั้งหมด: <strong id="vcNewsTotalEl">0</strong> ครั้ง</div>
+                <div class="vc-stat-sep"></div>
+                <div class="vc-stat-item"><i class="fas fa-fire"></i> ข่าวยอดนิยม: <span class="vc-stat-top" id="vcNewsTopEl">—</span></div>
+            </div>
+
+            <div class="news-grid">
+
+                <div class="news-card reveal" id="hcard-news1" onclick="openNewsModal('news1')" style="position:relative;">
+                    <div class="news-img">
+                        <img src="https://images.unsplash.com/photo-1587351021759-3e566b6af7cc?w=400&q=80" alt="โรงพยาบาล">
+                        <div class="news-cat">มาตรฐาน HA</div>
+                    </div>
+                    <div class="news-body">
+                        <div class="news-date" style="display:flex;justify-content:space-between;align-items:center;">
+                            <span>📅 1 มีนาคม 2569</span>
+                            <span class="vc-view-badge" id="hbadge-news1"><i class="fas fa-eye"></i> <span class="vc-num" id="hnum-news1">0</span></span>
+                        </div>
+                        <h3>โรงพยาบาลศูนย์แห่งใหม่ผ่านมาตรฐาน HA ระดับ 3</h3>
+                        <p>โรงพยาบาลศูนย์การแพทย์แห่งใหม่ประสบความสำเร็จในการผ่านการรับรองมาตรฐาน...</p>
+                    </div>
+                </div>
+
+                <div class="news-card reveal" id="hcard-news2" onclick="openNewsModal('news2')" style="position:relative;">
+                    <div class="news-img">
+                        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&q=80" alt="การประชุม">
+                        <div class="news-cat blue">ประชาสัมพันธ์</div>
+                    </div>
+                    <div class="news-body">
+                        <div class="news-date" style="display:flex;justify-content:space-between;align-items:center;">
+                            <span>📅 25 กุมภาพันธ์ 2569</span>
+                            <span class="vc-view-badge" id="hbadge-news2"><i class="fas fa-eye"></i> <span class="vc-num" id="hnum-news2">0</span></span>
+                        </div>
+                        <h3>การประชุมวิชาการ HS4 ประจำปี 2569 เปิดรับลงทะเบียนแล้ว</h3>
+                        <p>งานประชุมวิชาการด้านมาตรฐานสุขภาพครั้งใหญ่ที่สุดของปี เปิดรับลงทะเบียน...</p>
+                    </div>
+                </div>
+
+                <div class="news-card reveal" id="hcard-news3" onclick="openNewsModal('news3')" style="position:relative;">
+                    <div class="news-img">
+                        <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&q=80" alt="รางวัล">
+                        <div class="news-cat orange">รางวัลคุณภาพ</div>
+                    </div>
+                    <div class="news-body">
+                        <div class="news-date" style="display:flex;justify-content:space-between;align-items:center;">
+                            <span>📅 18 กุมภาพันธ์ 2569</span>
+                            <span class="vc-view-badge" id="hbadge-news3"><i class="fas fa-eye"></i> <span class="vc-num" id="hnum-news3">0</span></span>
+                        </div>
+                        <h3>10 โรงพยาบาลยอดเยี่ยมรับรางวัลคุณภาพแห่งปี</h3>
+                        <p>พิธีมอบรางวัลโรงพยาบาลยอดเยี่ยมประจำปี 2568 จำนวน 10 แห่ง...</p>
+                    </div>
+                </div>
+
+                <div class="news-card reveal" id="hcard-news4" onclick="openNewsModal('news4')" style="position:relative;">
+                    <div class="news-img">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&q=80" alt="Dashboard">
+                        <div class="news-cat purple">เทคโนโลยี</div>
+                    </div>
+                    <div class="news-body">
+                        <div class="news-date" style="display:flex;justify-content:space-between;align-items:center;">
+                            <span>📅 10 กุมภาพันธ์ 2569</span>
+                            <span class="vc-view-badge" id="hbadge-news4"><i class="fas fa-eye"></i> <span class="vc-num" id="hnum-news4">0</span></span>
+                        </div>
+                        <h3>เปิดตัวระบบ HS4 Dashboard เวอร์ชันใหม่</h3>
+                        <p>ระบบ Dashboard สำหรับติดตามข้อมูลมาตรฐานสุขภาพเวอร์ชันใหม่ พร้อมฟีเจอร์ AI...</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+<!-- ============================================================
+     ALL NEWS PAGE
+     ============================================================ -->
+<div id="all-news-page">
+
+    <!-- Banner -->
+    <div class="news-page-banner">
+        <div class="container">
+            <div class="news-page-breadcrumb">
+                <a onclick="hideAllNewsPage()"><i class="fas fa-home"></i> หน้าหลัก</a>
+                <span class="sep">›</span>
+                <span>ข่าวสารและกิจกรรม</span>
+            </div>
+            <h1>ข่าวสารและ<span>กิจกรรม</span></h1>
+            <p>ติดตามข่าวสาร นวัตกรรม และความเคลื่อนไหวล่าสุดจากระบบมาตรฐานสุขภาพ HS4</p>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="news-filter-bar">
+        <div class="container">
+            <div class="news-filter-inner">
+                <div class="filter-cats" id="filterCats">
+                    <button class="filter-cat-btn active" data-cat="all" onclick="filterNews('all', this)">ทั้งหมด</button>
+                    <button class="filter-cat-btn" data-cat="c-ha" onclick="filterNews('c-ha', this)">มาตรฐาน HA</button>
+                    <button class="filter-cat-btn" data-cat="c-pr" onclick="filterNews('c-pr', this)">ประชาสัมพันธ์</button>
+                    <button class="filter-cat-btn" data-cat="c-award" onclick="filterNews('c-award', this)">รางวัลคุณภาพ</button>
+                    <button class="filter-cat-btn" data-cat="c-tech" onclick="filterNews('c-tech', this)">เทคโนโลยี</button>
+                    <button class="filter-cat-btn" data-cat="c-policy" onclick="filterNews('c-policy', this)">นโยบาย</button>
+                    <button class="filter-cat-btn" data-cat="c-edu" onclick="filterNews('c-edu', this)">อบรม &amp; พัฒนา</button>
+                    <button class="filter-cat-btn" data-cat="c-inter" onclick="filterNews('c-inter', this)">นานาชาติ</button>
+                </div>
+                <div class="filter-right">
+                    <div class="filter-search-box">
+                        <input type="text" id="newsSearchInput" placeholder="ค้นหาข่าว..." oninput="searchNews(this.value)">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <select class="sort-select" onchange="sortNews(this.value)" id="sortSelect">
+                        <option value="newest">ล่าสุดก่อน</option>
+                        <option value="oldest">เก่าสุดก่อน</option>
+                        <option value="alpha">ก-ฮ</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="container">
+        <div class="news-results-info">
+            <p class="results-count" id="resultsCount">แสดง <strong>1–9</strong> จาก <strong>27</strong> ข่าว</p>
+            <div class="view-toggle">
+                <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')" title="Grid View"><i class="fas fa-th"></i></button>
+                <button class="view-btn" id="listViewBtn" onclick="setView('list')" title="List View"><i class="fas fa-list"></i></button>
+            </div>
+        </div>
+
+        <!-- View Stats Bar for All-News page -->
+        <div class="vc-stats-bar" id="allNewsStatsBar">
+            <div class="vc-live"><div class="vc-live-dot"></div><span style="font-size:.75rem;color:#047857;font-weight:700;">LIVE</span></div>
+            <div class="vc-stat-sep"></div>
+            <div class="vc-stat-item"><i class="fas fa-eye"></i> ยอดชมทั้งหมด: <strong id="vcAllNewsTotalEl">0</strong> ครั้ง</div>
+            <div class="vc-stat-sep"></div>
+            <div class="vc-stat-item"><i class="fas fa-fire"></i> ข่าวยอดนิยม: <span class="vc-stat-top" id="vcAllNewsTopEl">—</span></div>
+        </div>
+
+        <div class="allnews-grid" id="allNewsGrid"></div>
+        <div id="noResults" class="no-results" style="display:none;">
+            <i class="fas fa-search"></i>
+            <h3>ไม่พบข่าวที่ค้นหา</h3>
+            <p>ลองเปลี่ยนคำค้นหาหรือหมวดหมู่</p>
+        </div>
+        <div class="pagination-wrap" id="paginationWrap"></div>
+    </div>
+
+</div>
+
+
+
+<!-- ============================================================
+     VIDEO PAGE
+     ============================================================ -->
+<div id="video-page">
+
+    <!-- Banner -->
+    <div class="vp-banner" id="vpBanner">
+        <div class="container">
+            <div class="vp-breadcrumb">
+                <a onclick="hideVideoPage()">หน้าหลัก</a>
+                <span class="sep">›</span>
+                <a>มาตรฐาน HS4</a>
+                <span class="sep">›</span>
+                <span id="vpBreadcrumbCurrent">วีดีโอ</span>
+            </div>
+            <h1 id="vpBannerTitle">วีดีโอ <span id="vpBannerSpan">ประชุมเชิงวิชาการ</span></h1>
+            <p id="vpBannerDesc">รวมวีดีโอการประชุม สัมมนา และการนำเสนอวิชาการด้านมาตรฐานสุขภาพ</p>
+            <div class="vp-banner-stats">
+                <div class="vp-banner-stat"><strong id="vpStatTotal">20</strong><span>วีดีโอทั้งหมด</span></div>
+                <div class="vp-banner-stat"><strong>2.5K+</strong><span>ผู้ชมรวม</span></div>
+                <div class="vp-banner-stat"><strong>2569</strong><span>ปีล่าสุด</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab bar -->
+    <div class="vp-tabs-bar">
+        <div class="container">
+            <div class="vp-tabs-inner">
+                <div class="vp-tab-btns">
+                    <button class="vp-tab-btn active" id="vpTabConf" onclick="switchVideoTab('conference')">
+                        <i class="fas fa-chalkboard-teacher"></i> ประชุมเชิงวิชาการ
+                        <span class="vp-tab-count">12</span>
+                    </button>
+                    <button class="vp-tab-btn" id="vpTabStd" onclick="switchVideoTab('standards')">
+                        <i class="fas fa-certificate"></i> มาตรฐานระบบ
+                        <span class="vp-tab-count">8</span>
+                    </button>
+                </div>
+                <div class="vp-search-wrap">
+                    <div class="vp-search-box">
+                        <input type="text" id="vpSearchInput" placeholder="ค้นหาวีดีโอ..." oninput="vpSearch(this.value)">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Body -->
+    <div class="vp-body">
+        <div class="container">
+
+            <!-- Section header -->
+            <div class="vp-section-head">
+                <div class="vp-section-title">
+                    <i class="fas fa-play-circle"></i>
+                    <span id="vpSectionLabel">วีดีโอแนะนำ</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:1rem;">
+                    <span id="vpResultCount" style="font-size:0.82rem;color:#9ca3af;"></span>
+                    <div class="vp-sort-row">
+                        <select class="vp-sort-sel" onchange="vpSort(this.value)">
+                            <option value="newest">ล่าสุดก่อน</option>
+                            <option value="popular">ยอดนิยม</option>
+                            <option value="alpha">ตามตัวอักษร</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- Video View Stats Bar -->
+            <div class="vc-stats-bar" id="videoStatsBar">
+                <div class="vc-live"><div class="vc-live-dot"></div><span style="font-size:.75rem;color:#047857;font-weight:700;">LIVE</span></div>
+                <div class="vc-stat-sep"></div>
+                <div class="vc-stat-item"><i class="fas fa-play-circle"></i> ยอดชมวีดีโอทั้งหมด: <strong id="vcVideoTotalEl">0</strong> ครั้ง</div>
+                <div class="vc-stat-sep"></div>
+                <div class="vc-stat-item"><i class="fas fa-fire"></i> ยอดนิยม: <span class="vc-stat-top" id="vcVideoTopEl">—</span></div>
+            </div>
+            <div class="vp-grid" id="vpGrid"></div>
+            <div class="vp-empty" id="vpEmpty" style="display:none;">
+                <i class="fas fa-video-slash"></i>
+                <h3>ไม่พบวีดีโอที่ค้นหา</h3>
+                <p>ลองเปลี่ยนคำค้นหา หรือเลือกหมวดหมู่อื่น</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Video player modal -->
+<div class="vp-modal-backdrop" id="vpModalBackdrop" onclick="handleVpBackdrop(event)">
+    <div class="vp-modal-box" id="vpModalBox">
+        <div class="vp-modal-player">
+            <img id="vpModalImg" src="" alt="">
+            <div class="vp-modal-play-center">
+                <button class="vp-modal-play-btn"><i class="fas fa-play"></i></button>
+                <span class="vp-modal-note">* คลิกเพื่อเปิด YouTube บนแท็บใหม่</span>
+            </div>
+            <button class="vp-modal-close" onclick="closeVideoModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="vp-modal-info">
+            <h3 id="vpModalTitle"></h3>
+            <div class="vp-modal-info-row">
+                <div class="vp-modal-meta">
+                    <span><i class="far fa-calendar-alt"></i> <span id="vpModalDate"></span></span>
+                    <span><i class="fas fa-eye"></i> <span id="vpModalViews"></span> ครั้ง</span>
+                    <span><i class="fas fa-clock"></i> <span id="vpModalDur"></span></span>
+                    <span><i class="fas fa-tag"></i> <span id="vpModalCat"></span></span>
+                </div>
+                <div class="vp-modal-share">
+                    <button class="vp-share-btn yt" onclick="openYouTube()"><i class="fab fa-youtube"></i> YouTube</button>
+                    <button class="vp-share-btn fb"><i class="fab fa-facebook-f"></i></button>
+                    <button class="vp-share-btn ln"><i class="fas fa-comment"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ============================================================
+     NEWS MODAL POPUP
+     ============================================================ -->
+<div class="news-modal-backdrop" id="newsModalBackdrop" onclick="handleBackdropClick(event)">
+    <div class="news-modal-box" id="newsModalBox">
+
+        <!-- Green banner header with title -->
+        <div class="modal-hero-banner" id="modalHeroBanner">
+            <button class="modal-close-btn" onclick="closeNewsModal()" title="ปิด">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-hero-banner-inner">
+                <div class="modal-cat-badge" id="modalCatBadge"></div>
+                <h2 id="modalHeroTitle"></h2>
+            </div>
+        </div>
+
+        <!-- Scrollable body -->
+        <div class="modal-scroll-body">
+
+            <!-- Meta row -->
+            <div class="modal-meta-row">
+                <div class="modal-meta-item"><i class="far fa-calendar-alt"></i> <span id="modalDate"></span></div>
+                <div class="modal-meta-item"><i class="far fa-user"></i> <span id="modalAuthor"></span></div>
+                <div class="modal-meta-item"><i class="fas fa-tag"></i> <span id="modalCategory"></span></div>
+                <div class="modal-meta-item vc-modal-meta">
+                    <i class="fas fa-eye"></i>
+                    <span class="vc-modal-num" id="modalViewCount">0</span>
+                    <span>ครั้ง</span>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="modal-content-area">
+                <div class="modal-lead" id="modalLead"></div>
+                <div class="modal-body-text" id="modalBody"></div>
+            </div>
+
+            <!-- Footer row -->
+            <div class="modal-footer-row">
+                <div class="modal-brand-note"><i class="fas fa-shield-alt"></i> HS4 Health Standards System</div>
+                <div>
+                    <span class="modal-share-label" style="margin-right:0.75rem;">แชร์ข่าวนี้:</span>
+                    <div class="modal-share-btns" style="display:inline-flex;">
+                        <button class="share-btn fb"><i class="fab fa-facebook-f"></i> Facebook</button>
+                        <button class="share-btn tw"><i class="fab fa-twitter"></i> Twitter</button>
+                        <button class="share-btn ln"><i class="fas fa-comment"></i> Line</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-----------------=============================================
+FAQ
+===========================================-------------------->
+
+
+
+
+
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>HS4 Health Service Support Standards System</h4>
+                <p>ระบบประเมินมาตรฐานสุขภาพ HS4 มุ่งมั่นในการยกระดับคุณภาพและมาตรฐานการให้บริการด้านสุขภาพในประเทศไทย</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>หน้าหลัก</h4>
+                <ul>
+                    <li><a href="#opendata">ข้อมูลเปิด</a></li>
+                    <li><a href="#standard">มาตรฐาน HS4</a></li>
+                    <li><a href="#moph">โรงพยาบาลยอดเยี่ยม</a></li>
+                    <li><a href="#sumary">ข้อมูลสรุป</a></li>
+                    <li><a href="#service">มาตรฐานบริการ</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>บริการของเรา</h4>
+                <ul>
+                    <li><a href="#">การรับรองมาตรฐาน</a></li>
+                    <li><a href="#">การอบรมและพัฒนา</a></li>
+                    <li><a href="#">การให้คำปรึกษา</a></li>
+                    <li><a href="#">งานวิจัยและพัฒนา</a></li>
+                    <li><a href="#">เอกสารและสื่อ</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                    <h4>ติดต่อเรา</h4>
+                    <p><i class="fas fa-map-marker-alt"></i>  เลขที่ 88/44 หมู่ 4 ซอยสาธารณสุข 8ถนนติวานนท์ ตำบลตลาดขวัญ อำเภอเมืองนนทบุรี จังหวัดนนทบุรี 11000</p>
+                    <p><i class="fas fa-envelope"></i> hs4_support@hss.mail.go.th</p>
+                    <p><i class="fa-brands fa-line"></i> @191zmwgi</p>
+                    <h4>รับข่าวสารจากเรา</h4>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="อีเมลของคุณ">
+                        <button type="submit" class="btn-submit">สมัคร</button>
+                    </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 HS4 Health Service Support Standards System. สงวนลิขสิทธิ์.</p>
+            <p>นโยบายความเป็นส่วนตัว | เงื่อนไขการใช้งาน | แผนผังเว็บไซต์</p>
+        </div>
+    </div>
+</footer>
+
+
+
+
+</main>
+<script src="script.js"></script>
+</body>
+</html>
